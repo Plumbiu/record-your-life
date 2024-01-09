@@ -2,6 +2,9 @@
 
 > 记录你的 windows 应用使用时间
 
+> [!NOTE]  
+> 0.1.0 之前的版本计时有问题，建议停掉计划任务后重新安装
+
 ![terminal](./resource/terminal.png)
 
 ![web](./resource/web.png)

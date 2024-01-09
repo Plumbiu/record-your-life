@@ -48,8 +48,17 @@ export async function init(timer: number, config: Config) {
   let shoudWrite = false
   let count = 0
   const apps = await getInstalledApps()
-  WatchWindowForeground(async (_curr, prevId, _win) => {
+  WatchWindowForeground(async (_curr, prevId, win) => {
     const preApp = findApp(apps, getMainWindow(prevId)?.pid)
+    const curApp = findApp(apps, win.pid)
+    if (curApp) {
+      const record = records.get(curApp)
+      if (!record) {
+        insertRecord(curApp, true)
+      } else {
+        record.end = Date.now()
+      }
+    }
     insertRecord(preApp)
     shoudWrite = true
   })
