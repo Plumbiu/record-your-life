@@ -6,8 +6,6 @@
 
 ![web](./resource/web.png)
 
-
-
 # 安装
 
 1. npm 安装
@@ -24,6 +22,8 @@ npm install record-your-life -g
 record-your-life set STORAGE_PATH
 ```
 
+> 如果不设置的话，默认会存储在 `npm` 全局包安装的路径
+
 3. windows 自启动
 
 > 图片教程在 `resource/step` 文件夹
@@ -37,12 +37,7 @@ record-your-life set STORAGE_PATH
 - **操作**一栏，左下角点击**新建“**，在弹出的菜单中，**“脚本或程序“**写入 `powershell`，**“添加参数（可选）“** 写入 `-windowstyle hidden -command "record-your-life init"`
 - 重启电脑或者右键启动即可
 
->默认情况下，`record-your-life` 5min 中会进行写入操作，如果你觉得时间不合适，可以将**“添加参数（可选）”** 一栏中的选项改为 `-windowstyle hidden -command "record-your-life init SET_TIME"`，其中 `SET_TIME` 单位是毫秒
-
-
-
-> 如果不设置的话，默认会存储在 `npm` 全局包安装的路径
-
+> 默认情况下，`record-your-life` 5min 中会进行写入操作，如果你觉得时间不合适，可以将**“添加参数（可选）”** 一栏中的选项改为 `-windowstyle hidden -command "record-your-life init SET_TIME"`，其中 `SET_TIME` 单位是毫秒
 
 # 使用
 
