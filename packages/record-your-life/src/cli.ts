@@ -62,7 +62,7 @@ cli.command('init [timer]', 'init record your life').action(async (timer) => {
   if (timer < 1000) {
     return
   }
-  await init(timer ?? 1_000, config) // 5 min = 5 * 60 * 1000
+  await init(timer ?? 300_000, config) // 5 min = 5 * 60 * 1000
 })
 
 cli.help()
