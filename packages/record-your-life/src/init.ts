@@ -50,16 +50,14 @@ export async function init(timer: number, config: Config) {
   WatchWindowForeground(async (_curr, prevId, win) => {
     const preApp = findApp(apps, getHandleProcessID(prevId))
     const curApp = findApp(apps, win.pid)
-    insertRecord(preApp)
-    if (curApp) {
-      insertRecord(curApp)
+    if (preApp) {
+      insertRecord(preApp)
     } else {
       if (win.title) {
-        console.log(win.title)
-
         insertRecord(win.title)
       }
     }
+    insertRecord(curApp)
     shoudWrite = true
   })
   setInterval(async () => {
