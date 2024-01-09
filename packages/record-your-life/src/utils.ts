@@ -1,5 +1,5 @@
 import { spawn } from 'node:child_process'
-import { getProcessFilePath2Sync } from 'hmc-win32'
+import { getProcessFilePath2Sync, getProcessName2Sync } from 'hmc-win32'
 import { App } from '@record-your-life/shared'
 import coniv from 'iconv-lite'
 
@@ -43,6 +43,15 @@ export function findApp(apps: App, pid: number | null | undefined) {
   const filePath = getProcessFilePath2Sync(pid)
   if (filePath === null) {
     return
+  }
+  if (!apps[filePath]) {
+    const exe = getProcessName2Sync(pid)?.replace('.exe', '')
+    if (exe) {
+      const id = Object.values(apps).find(
+        (app) => app.includes(exe) || exe?.includes(app),
+      )
+      return id
+    }
   }
   return apps[filePath]
 }

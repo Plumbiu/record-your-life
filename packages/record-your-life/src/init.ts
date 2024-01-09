@@ -50,8 +50,6 @@ export async function init(timer: number, config: Config) {
   const apps = await getInstalledApps()
   WatchWindowForeground(async (_curr, prevId, _win) => {
     const preApp = findApp(apps, getMainWindow(prevId)?.pid)
-    console.log({ preApp })
-
     insertRecord(preApp)
     shoudWrite = true
   })
