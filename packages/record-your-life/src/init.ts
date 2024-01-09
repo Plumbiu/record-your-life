@@ -29,6 +29,7 @@ function insertRecord(name: string | undefined) {
   }
 }
 
+const EXCLUDES_EXE = ['SearchHost.exe', 'explorer.exe']
 export async function init(timer: number, config: Config) {
   const todayFile = path.join(config.storagePath, `${getYMD()}.json`)
   if (fs.existsSync(todayFile)) {
@@ -53,8 +54,12 @@ export async function init(timer: number, config: Config) {
       insertRecord(curApp)
     } else {
       if (win.pid) {
-        if (getProcessName2Sync(win.pid) !== 'explorer.exe') {
-          insertRecord(win.title)
+        console.log(getProcessName2Sync(win.pid))
+        const processName = getProcessName2Sync(win.pid)
+        if (processName) {
+          if (!EXCLUDES_EXE.includes(processName)) {
+            insertRecord(win.title)
+          }
         }
       }
     }

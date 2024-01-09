@@ -39,11 +39,11 @@ export function getHours(time: number) {
 
 export function uniqueDurationByHour(durations: Duration[]) {
   const tmp: Record<
-    string,
-    {
-      time: string
-      duration: number
-    }
+  string,
+  {
+    time: string
+    duration: number
+  }
   > = {}
   for (const { duration, time } of durations) {
     const fmtTime = getHours(time)
