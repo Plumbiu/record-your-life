@@ -1,0 +1,45 @@
+{
+  "name": "record-your-life",
+  "version": "0.0.4",
+  "description": "Record your app usage",
+  "type": "module",
+  "main": "./dist/index.js",
+  "scripts": {
+    "test": "pnpm vitest",
+    "build": "pnpm tsup"
+  },
+  "bin": {
+    "record-your-life": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "record",
+    "win32",
+    "windows",
+    "os",
+    "nodejs",
+    "napi",
+    "app",
+    "note"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/plumbiu/record-your-life.git"
+  },
+  "bugs": {
+    "url": "https://github.com/plumbiu/record-your-life/issues"
+  },
+  "homepage": "https://github.com/plumbiu/record-your-life#readme",
+  "author": "Plumbiu",
+  "license": "MIT",
+  "devDependencies": {
+    "@record-your-life/shared": "workspace:^",
+    "cac": "^6.7.14",
+    "chalk": "^5.3.0",
+    "consola": "^3.2.3",
+    "hmc-win32": "^1.4.6",
+    "iconv-lite": "^0.6.3"
+  }
+}

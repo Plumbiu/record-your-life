@@ -1,0 +1,22 @@
+{
+  "name": "record-your-monorepo",
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "test": "vitest",
+    "build": "pnpm tsup",
+    "dev": "esno packages/record-your-life/src/index.ts",
+    "dev:web": "pnpm -F web run dev"
+  },
+  "author": "Plumbiu",
+  "license": "MIT",
+  "devDependencies": {
+    "@plumbiu/eslint-config": "^0.2.0",
+    "@types/node": "^20.10.6",
+    "eslint": "^8.56.0",
+    "esno": "^4.0.0",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3",
+    "vitest": "^1.1.3"
+  }
+}
