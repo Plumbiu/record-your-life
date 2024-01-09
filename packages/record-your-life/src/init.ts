@@ -1,7 +1,7 @@
 import path from 'node:path'
 import fsp from 'node:fs/promises'
 import fs from 'node:fs'
-import { WatchWindowForeground, getHandleProcessID } from 'hmc-win32'
+import { WatchWindowForeground, getProcessName2Sync } from 'hmc-win32'
 import { Config, Usage, getYMD } from '@record-your-life/shared'
 import { __dirname } from './constant'
 import { findApp, getInstalledApps } from './utils'
@@ -47,24 +47,22 @@ export async function init(timer: number, config: Config) {
   let shoudWrite = false
   let count = 0
   const apps = await getInstalledApps()
-  WatchWindowForeground(async (_curr, prevId, win) => {
-    const preApp = findApp(apps, getHandleProcessID(prevId))
+  WatchWindowForeground(async (_curr, _prevId, win) => {
     const curApp = findApp(apps, win.pid)
-    if (preApp) {
-      insertRecord(preApp)
+    if (curApp) {
+      insertRecord(curApp)
     } else {
-      if (win.title) {
-        insertRecord(win.title)
+      if (win.pid) {
+        if (getProcessName2Sync(win.pid) !== 'explorer.exe') {
+          insertRecord(win.title)
+        }
       }
     }
-    insertRecord(curApp)
     shoudWrite = true
   })
   setInterval(async () => {
     count++
     if (shoudWrite || count > 6) {
-      console.log(111)
-
       await fsp.writeFile(
         todayFile,
         JSON.stringify(Object.fromEntries(records)),
