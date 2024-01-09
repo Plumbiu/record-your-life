@@ -36,8 +36,8 @@ export function getInstalledApps() {
   })
 }
 
-export function findApp(apps: App, pid: number | null) {
-  if (pid === null) {
+export function findApp(apps: App, pid: number | null | undefined) {
+  if (pid == null) {
     return
   }
   const filePath = getProcessFilePath2Sync(pid)

@@ -1,21 +1,21 @@
 import path from 'node:path'
 import fsp from 'node:fs/promises'
 import fs from 'node:fs'
-import { WatchWindowForeground, getProcessName2Sync } from 'hmc-win32'
+import { WatchWindowForeground, getMainWindow } from 'hmc-win32'
 import { Config, Usage, getYMD } from '@record-your-life/shared'
 import { __dirname } from './constant'
 import { findApp, getInstalledApps } from './utils'
 
 const records: Map<string, Usage> = new Map()
 
-function insertRecord(name: string | undefined) {
+function insertRecord(name: string | undefined, onlyInit = false) {
   if (!name) {
     return
   }
   name = name.replace('.exe', '')
   const record = records.get(name)
   const now = Date.now()
-  if (!record) {
+  if (!record || onlyInit) {
     records.set(name, {
       total: 0,
       end: now,
@@ -29,7 +29,7 @@ function insertRecord(name: string | undefined) {
   }
 }
 
-const EXCLUDES_EXE = ['SearchHost.exe', 'explorer.exe']
+// const EXCLUDES_EXE = ['SearchHost.exe', 'explorer.exe']
 export async function init(timer: number, config: Config) {
   const todayFile = path.join(config.storagePath, `${getYMD()}.json`)
   if (fs.existsSync(todayFile)) {
@@ -48,21 +48,11 @@ export async function init(timer: number, config: Config) {
   let shoudWrite = false
   let count = 0
   const apps = await getInstalledApps()
-  WatchWindowForeground(async (_curr, _prevId, win) => {
-    const curApp = findApp(apps, win.pid)
-    if (curApp) {
-      insertRecord(curApp)
-    } else {
-      if (win.pid) {
-        console.log(getProcessName2Sync(win.pid))
-        const processName = getProcessName2Sync(win.pid)
-        if (processName) {
-          if (!EXCLUDES_EXE.includes(processName)) {
-            insertRecord(win.title)
-          }
-        }
-      }
-    }
+  WatchWindowForeground(async (_curr, prevId, _win) => {
+    const preApp = findApp(apps, getMainWindow(prevId)?.pid)
+    console.log({ preApp })
+
+    insertRecord(preApp)
     shoudWrite = true
   })
   setInterval(async () => {
