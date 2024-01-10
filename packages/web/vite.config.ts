@@ -7,5 +7,6 @@ export default defineConfig({
   plugins: [vue(), viteSingleFile()],
   build: {
     outDir: '../record-your-life/dist',
+    copyPublicDir: false,
   },
 })

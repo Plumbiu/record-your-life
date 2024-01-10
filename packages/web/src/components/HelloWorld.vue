@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import VChart from '@visactor/vchart'
+import VChart from '../chart/index'
 import { onMounted } from 'vue'
 import { formatAreaChartData } from '../utils/chart/index'
 
-const data = await fetch('/api/data').then((res) => res.json())
+const data = await fetch(
+  import.meta.env.PROD ? '/api/data' : '/test.json',
+).then((res) => res.json())
 
 function createChart(type: string, dom: string, isHorizontal = false) {
   const chart = new VChart(formatAreaChartData(data, type, isHorizontal), {
