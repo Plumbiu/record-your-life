@@ -1,5 +1,5 @@
 /* eslint-disable @stylistic/max-len */
-import chalk from 'chalk'
+import color from 'picocolors'
 import {
   formatDuration,
   getHours,
@@ -9,14 +9,13 @@ import {
 
 // const Unicode = {
 //   LighterSquare: chalk.hex('#FFF')('■'),
-//   LightSquare: chalk.hex('#FCE6C9')('■'),
-//   Square: chalk.hex('#228B22')('■'),
-//   DarkSquare: chalk.hex('#385E0F').dim('■'),
-//   DarkerSquare: chalk.hex('#00C957').dim('■'),
 // }
+
 const APP_HEAD = 'Application'
 
-const highlight = chalk.bold.white.underline
+const highlight = (str: string | number) => {
+  color.bold(color.white(color.underline(str)))
+}
 
 export class Logger {
   records: Record<string, Usage>
@@ -41,11 +40,11 @@ export class Logger {
     this.nameMaxLen =
       this.nameMaxLen > APP_HEAD.length ? this.nameMaxLen : APP_HEAD.length
     console.log(
-      chalk.dim('\nYou use ') +
+      color.dim('\nYou use ') +
         highlight(this.appLen) +
-        chalk.dim(' apps on ') +
+        color.dim(' apps on ') +
         highlight(this.date) +
-        chalk.dim(', totally ') +
+        color.dim(', totally ') +
         highlight(this.amount),
     )
   }
@@ -60,7 +59,7 @@ export class Logger {
 
   list() {
     Object.keys(this.records).forEach((key, i) => {
-      console.log(chalk.dim(i + 1 + '.') + chalk.cyan(' ' + key))
+      console.log(color.dim(i + 1 + '.') + color.cyan(' ' + key))
     })
   }
 
@@ -73,10 +72,12 @@ export class Logger {
       .sort((a, b) => b.total - a.total)
     const maxLen = barData[0].total / 300_000
     console.log(
-      chalk.green.bold(
-        'Application'.padEnd(this.nameMaxLen) +
-          '  Chart'.padEnd(maxLen + 4) +
-          '  Duration',
+      color.green(
+        color.bold(
+          'Application'.padEnd(this.nameMaxLen) +
+            '  Chart'.padEnd(maxLen + 4) +
+            '  Duration',
+        ),
       ),
     )
     for (const { name, total } of barData) {
@@ -85,7 +86,7 @@ export class Logger {
           '■'.repeat(Math.ceil(total / 300_000)).padEnd(maxLen + 4, ' ') +
           formatDuration(total) +
           '\r' +
-          chalk.cyan(name),
+          color.cyan(name),
       )
     }
   }
@@ -102,7 +103,7 @@ export class Logger {
     for (let i = start; i <= end; i++) {
       h += (i + ':00').padEnd(14)
     }
-    console.log(chalk.bold.green(h))
+    console.log(color.bold(color.green(h)))
     for (const [key, { durations }] of Object.entries(this.records)) {
       let str = ' '.repeat(this.nameMaxLen + 3)
       const durs = uniqueDurationByHour(durations).sort(
@@ -112,7 +113,7 @@ export class Logger {
         str += formatDuration(dur.duration).padEnd(14, ' ')
       }
       str += '\r'
-      str += chalk.cyan(key)
+      str += color.cyan(key)
       console.log(str)
     }
   }
