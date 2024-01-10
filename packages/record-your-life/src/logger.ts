@@ -52,7 +52,9 @@ export class Logger {
   table() {
     const values: Array<{ name: string; duration: string }> = []
     for (const { name, total } of this.records) {
-      values.push({ name, duration: formatDuration(total) })
+      if (total) {
+        values.push({ name, duration: formatDuration(total) })
+      }
     }
     console.table(values)
   }
