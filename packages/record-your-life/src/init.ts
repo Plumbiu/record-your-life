@@ -44,8 +44,6 @@ export async function init(timer: number, config: Config) {
       }
     } catch (error) {}
   }
-  let shoudWrite = false
-  let count = 0
   const apps = await getInstalledApps()
   WatchWindowForeground(async (_curr, prevId, win) => {
     const preApp = findApp(apps, getMainWindow(prevId)?.pid)
@@ -59,17 +57,8 @@ export async function init(timer: number, config: Config) {
       }
     }
     insertRecord(preApp)
-    shoudWrite = true
   })
   setInterval(async () => {
-    count++
-    if (shoudWrite || count > 6) {
-      await fsp.writeFile(
-        todayFile,
-        JSON.stringify(Object.fromEntries(records)),
-      )
-      shoudWrite = false
-      count > 6 && count === 0
-    }
+    await fsp.writeFile(todayFile, JSON.stringify(Object.fromEntries(records)))
   }, timer)
 }
