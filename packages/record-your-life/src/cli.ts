@@ -3,11 +3,13 @@ import fsp from 'node:fs/promises'
 import { cac } from 'cac'
 import { consola } from 'consola'
 import { Config, Usage } from '@record-your-life/shared'
+import color from 'picocolors'
 import { CONFIG_FILE_PATH, DEFAULT_STORAGE_PATH, __dirname } from './constant'
 import { init } from './init'
 import { Logger } from './logger'
 import { startServer } from './server'
 import { configInit } from './fsUtils'
+import { highlight } from './utils'
 
 const config: Config = configInit()
 const cli = cac('record-your-life')
@@ -32,7 +34,8 @@ cli
   .option('--board', 'Board chat format of usage')
   .option('--web', 'Start web server')
   .option('--list', 'List of apps')
-  .action(async (date: string, { table, list, bar, web, board }) => {
+  .option('--detail', 'Show the unused apps')
+  .action(async (date: string, { table, list, bar, web, board, detail }) => {
     try {
       const records: Record<string, Usage> = JSON.parse(
         await fsp.readFile(
@@ -41,18 +44,31 @@ cli
         ),
       )
       const logger = new Logger(records, date)
+      let unusedApps: string[] = []
       if (table) {
         logger.table()
       } else if (list) {
         logger.list()
       } else if (bar) {
-        logger.bar()
+        unusedApps = logger.bar()
       } else if (web) {
         await startServer(config, records)
       } else {
-        logger.board()
+        unusedApps = logger.board()
       }
-      console.log()
+      if (unusedApps.length > 0 && detail) {
+        console.log(
+          '\n' +
+            highlight(unusedApps.length) +
+            color.dim(' unused apps') +
+            color.white('(0ms)  '),
+        )
+        for (const app of unusedApps) {
+          console.log(color.cyan(app))
+        }
+      } else {
+        console.log('\n')
+      }
     } catch (error: any) {
       consola.error(error.message)
     }

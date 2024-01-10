@@ -2,6 +2,7 @@ import { spawn } from 'node:child_process'
 import { getProcessFilePath2Sync, getProcessName2Sync } from 'hmc-win32'
 import { App } from '@record-your-life/shared'
 import coniv from 'iconv-lite'
+import color from 'picocolors'
 
 export function getInstalledApps() {
   return new Promise<App>((r) => {
@@ -66,3 +67,7 @@ export function findApp(apps: App, pid: number | null | undefined) {
   }
   return apps[filePath]
 }
+
+export const highlight = (str: string | number) =>
+  // eslint-disable-next-line @stylistic/implicit-arrow-linebreak
+  color.underline(color.white(str))

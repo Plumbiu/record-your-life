@@ -3,7 +3,7 @@
 > 记录你的 windows 应用使用时间
 
 > [!NOTE]  
-> 0.1.0 之前的版本计时有问题，建议停掉计划任务后重新安装
+> 0.1.0 之前的版本计时有问题，建议停掉计划任务，安装最新版本
 
 ![terminal](./resource/terminal.png)
 
@@ -62,11 +62,20 @@ record-your-life 2024-01-08 --board
 record-your-life 2024-01-08 --web
 ```
 
-## --help
+## --detail
+
+打印 `0ms` 的程序
 
 ```bash
-record-your-life
+record-your-life 2024-01-08 --list --detail
+record-your-life 2024-01-08 --bar --detail
+record-your-life 2024-01-08 --table --detail
+record-your-life 2024-01-08 --board --detail
+```
 
+## --help
+
+```txt
 Usage:
   $ record-your-life <date>
 
@@ -86,5 +95,6 @@ Options:
   --board     Board chat format of usage
   --web       Start web server
   --list      List of apps
+  --detail    Show the unused apps
   -h, --help  Display this message
 ```

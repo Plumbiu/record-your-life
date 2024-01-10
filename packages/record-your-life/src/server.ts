@@ -2,7 +2,7 @@ import fsp from 'node:fs/promises'
 import { createServer } from 'node:http'
 import path from 'node:path'
 import { Config, Usage } from '@record-your-life/shared'
-import chalk from 'chalk'
+import color from 'picocolors'
 import { __dirname } from './constant'
 
 export async function startServer(
@@ -18,6 +18,6 @@ export async function startServer(
     }
   })
   server.listen(3033, () => {
-    console.log('server is running at ' + chalk.cyan('http://localhost:3033'))
+    console.log('server is running at ' + color.cyan('http://localhost:3033'))
   })
 }

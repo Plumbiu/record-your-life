@@ -1,4 +1,3 @@
-/* eslint-disable @stylistic/max-len */
 import color from 'picocolors'
 import {
   formatDuration,
@@ -6,16 +5,13 @@ import {
   uniqueDurationByHour,
   Usage,
 } from '@record-your-life/shared'
+import { highlight } from './utils'
 
 // const Unicode = {
 //   LighterSquare: chalk.hex('#FFF')('■'),
 // }
 
 const APP_HEAD = 'Application'
-
-const highlight = (str: string | number) => {
-  color.bold(color.white(color.underline(str)))
-}
 
 export class Logger {
   records: Record<string, Usage>
@@ -80,15 +76,22 @@ export class Logger {
         ),
       ),
     )
+    const unstartedApps: string[] = []
     for (const { name, total } of barData) {
-      console.log(
-        ' '.repeat(this.nameMaxLen + 2) +
-          '■'.repeat(Math.ceil(total / 300_000)).padEnd(maxLen + 4, ' ') +
-          formatDuration(total) +
-          '\r' +
-          color.cyan(name),
-      )
+      const duration = formatDuration(total)
+      if (duration === '0ms') {
+        unstartedApps.push(name)
+      } else {
+        console.log(
+          ' '.repeat(this.nameMaxLen + 2) +
+            '■'.repeat(Math.ceil(total / 300_000)).padEnd(maxLen + 4, ' ') +
+            duration +
+            '\r' +
+            color.cyan(name),
+        )
+      }
     }
+    return unstartedApps
   }
 
   board() {
@@ -99,22 +102,28 @@ export class Logger {
     const end = Math.ceil(
       +getHours(Math.max(...values.map((item) => item.end))),
     )
-    let h = 'Time '.padEnd(this.nameMaxLen + 3)
+    let h = 'Time '.padEnd(this.nameMaxLen - 2)
     for (let i = start; i <= end; i++) {
-      h += (i + ':00').padEnd(14)
+      h += (i + ':00').padEnd(12)
     }
     console.log(color.bold(color.green(h)))
+    const unusedApps: string[] = []
     for (const [key, { durations }] of Object.entries(this.records)) {
-      let str = ' '.repeat(this.nameMaxLen + 3)
+      let str = ' '.repeat(this.nameMaxLen - 2)
       const durs = uniqueDurationByHour(durations).sort(
         (a, b) => a.time - b.time,
       )
-      for (const dur of durs) {
-        str += formatDuration(dur.duration).padEnd(14, ' ')
+      if (durs.length === 0) {
+        unusedApps.push(key)
+      } else {
+        for (const dur of durs) {
+          str += formatDuration(dur.duration).padEnd(12, ' ')
+        }
+        str += '\r'
+        str += color.cyan(key)
+        console.log(str)
       }
-      str += '\r'
-      str += color.cyan(key)
-      console.log(str)
     }
+    return unusedApps
   }
 }
