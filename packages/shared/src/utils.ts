@@ -9,17 +9,17 @@ export function getYMD() {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
 }
 
-export function toFixed(n: number) {
-  return n.toFixed(2)
+export function toFixed(n: number, fixed = 2) {
+  return n.toFixed(fixed)
 }
-export function formatDuration(time: number) {
+export function formatDuration(time: number, fixed = 2) {
   let r: string = time + 'ms'
   if (time > 3600_000) {
-    r = `${toFixed(time / 3600_000)}h`
+    r = `${toFixed(time / 3600_000, fixed)}h`
   } else if (time > 60_000) {
-    r = `${toFixed(time / 60_000)}min`
+    r = `${toFixed(time / 60_000, fixed)}min`
   } else if (time > 1_000) {
-    r = `${toFixed(time / 1_000)}s`
+    r = `${toFixed(time / 1_000, fixed)}s`
   }
   return r
 }

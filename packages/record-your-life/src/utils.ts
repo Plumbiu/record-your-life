@@ -71,3 +71,11 @@ export function findApp(apps: App, pid: number | null | undefined) {
 export const highlight = (str: string | number) =>
   // eslint-disable-next-line @stylistic/implicit-arrow-linebreak
   color.underline(color.white(str))
+
+export function getUtf8Length(str: string) {
+  let count = 0
+  Object.values(str).forEach((item) => {
+    count += Math.ceil(item.charCodeAt(0).toString(2).length / 8)
+  })
+  return count
+}

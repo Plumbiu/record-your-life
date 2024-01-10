@@ -5,7 +5,7 @@ import {
   uniqueDurationByHour,
   Usage,
 } from '@record-your-life/shared'
-import { highlight } from './utils'
+import { getUtf8Length, highlight } from './utils'
 
 interface LogUsage extends Usage {
   name: string
@@ -31,8 +31,9 @@ export class Logger {
         this.unusedApps.push(name)
       } else {
         amount += total
-        if (name.length > this.nameMaxLen) {
-          this.nameMaxLen = name.length
+        const len = getUtf8Length(name)
+        if (len > this.nameMaxLen) {
+          this.nameMaxLen = len
         }
       }
     }
@@ -95,9 +96,10 @@ export class Logger {
     const end = Math.ceil(
       +getHours(Math.max(...this.records.map((item) => item.end))),
     )
-    let h = 'Time '.padEnd(this.nameMaxLen - 2)
+    const PEND_LEN = 9
+    let h = 'Time '.padEnd(this.nameMaxLen) + ' '
     for (let i = start; i <= end; i++) {
-      h += (i + ':00').padEnd(12)
+      h += (i + ':00').padEnd(PEND_LEN)
     }
     console.log(color.bold(color.green(h)))
     for (const { durations, name } of this.records) {
@@ -105,13 +107,13 @@ export class Logger {
         (a, b) => a.time - b.time,
       )
       if (durs.length > 0) {
-        let str = ' '.repeat(this.nameMaxLen - 2)
+        let str = ' '.repeat(this.nameMaxLen) + ' '
         for (let i = 0; i <= end - start; i++) {
-          const dur = formatDuration(durs[i]?.duration)
+          const dur = formatDuration(durs[i]?.duration, 1)
           if (dur === 'undefinedms') {
-            str = ' '.repeat(12) + str
+            str = ' '.repeat(PEND_LEN) + str
           } else {
-            str += dur.padEnd(12, ' ')
+            str += dur.padEnd(PEND_LEN, ' ')
           }
         }
         str += '\r'
