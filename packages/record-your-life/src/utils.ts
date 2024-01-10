@@ -19,13 +19,18 @@ export function getInstalledApps() {
       const arr = data.split(/\r?\n|\s{2,}/g).filter(Boolean)
       let i = 0
       while (i < arr.length) {
-        if (arr[i].endsWith('.exe.FriendlyAppName')) {
+        if (arr[i].endsWith('.FriendlyAppName')) {
           const key = arr[i].replace('.FriendlyAppName', '')
           const value: string[] = []
-          while (!arr[++i].endsWith('.exe.ApplicationCompany')) {
+          i++
+          while (
+            !arr[i].endsWith('.ApplicationCompany') &&
+            !arr[i].endsWith('.FriendlyAppName')
+          ) {
             if (arr[i] !== 'REG_SZ') {
               value.push(arr[i])
             }
+            i++
           }
           result[key] = value.join(' ')
         }
@@ -52,6 +57,9 @@ export function findApp(apps: App, pid: number | null | undefined) {
       )
       return id
     }
+  }
+  if (apps[filePath].length > 35) {
+    return
   }
   return apps[filePath]
 }
