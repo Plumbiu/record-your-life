@@ -98,14 +98,16 @@ export class Logger {
     const end = Math.ceil(
       +getHours(Math.max(...values.map((item) => item.end))),
     )
-    let h = 'Time '.padEnd(this.nameMaxLen + 2)
+    let h = 'Time '.padEnd(this.nameMaxLen + 3)
     for (let i = start; i <= end; i++) {
       h += (i + ':00').padEnd(14)
     }
     console.log(chalk.bold.green(h))
     for (const [key, { durations }] of Object.entries(this.records)) {
-      let str = ' '.repeat(this.nameMaxLen + 2)
-      const durs = uniqueDurationByHour(durations)
+      let str = ' '.repeat(this.nameMaxLen + 3)
+      const durs = uniqueDurationByHour(durations).sort(
+        (a, b) => a.time - b.time,
+      )
       for (const dur of durs) {
         str += formatDuration(dur.duration).padEnd(14, ' ')
       }
