@@ -109,15 +109,20 @@ export class Logger {
     console.log(color.bold(color.green(h)))
     const unusedApps: string[] = []
     for (const [key, { durations }] of Object.entries(this.records)) {
-      let str = ' '.repeat(this.nameMaxLen - 2)
       const durs = uniqueDurationByHour(durations).sort(
         (a, b) => a.time - b.time,
       )
       if (durs.length === 0) {
         unusedApps.push(key)
       } else {
-        for (const dur of durs) {
-          str += formatDuration(dur.duration).padEnd(12, ' ')
+        let str = ' '.repeat(this.nameMaxLen - 2)
+        for (let i = 0; i <= end - start; i++) {
+          const dur = formatDuration(durs[i]?.duration)
+          if (dur === 'undefinedms') {
+            str = ' '.repeat(12) + str
+          } else {
+            str += dur.padEnd(12, ' ')
+          }
         }
         str += '\r'
         str += color.cyan(key)
