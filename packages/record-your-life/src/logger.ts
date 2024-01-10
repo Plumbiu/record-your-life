@@ -7,34 +7,37 @@ import {
 } from '@record-your-life/shared'
 import { highlight } from './utils'
 
-// const Unicode = {
-//   LighterSquare: chalk.hex('#FFF')('■'),
-// }
-
-const APP_HEAD = 'Application'
+interface LogUsage extends Usage {
+  name: string
+}
 
 export class Logger {
-  records: Record<string, Usage>
-  nameMaxLen: number
+  records: LogUsage[]
+  nameMaxLen: number = -1
   date: string
   amount: string
   appLen: number
+  unusedApps: string[] = []
 
   constructor(records: Record<string, Usage>, date: string) {
     let amount = 0
     this.date = date
-    this.records = records
-    const entries = Object.entries(records)
-    this.nameMaxLen = Math.max(
-      ...entries.map(([key, { total }]) => {
+    this.records = Object.entries(records).map(([name, usage]) => ({
+      name,
+      ...usage,
+    }))
+    for (const { total, name } of this.records) {
+      if (total === 0) {
+        this.unusedApps.push(name)
+      } else {
         amount += total
-        return key.length
-      }),
-    )
-    this.appLen = entries.length
+        if (name.length > this.nameMaxLen) {
+          this.nameMaxLen = name.length
+        }
+      }
+    }
+    this.appLen = this.records.length
     this.amount = formatDuration(amount)
-    this.nameMaxLen =
-      this.nameMaxLen > APP_HEAD.length ? this.nameMaxLen : APP_HEAD.length
     console.log(
       color.dim('\nYou use ') +
         highlight(this.appLen) +
@@ -46,42 +49,34 @@ export class Logger {
   }
 
   table() {
-    const values: Array<{ app: string; duration: string }> = []
-    for (const [app, { total }] of Object.entries(this.records)) {
-      values.push({ app, duration: formatDuration(total) })
+    const values: Array<{ name: string; duration: string }> = []
+    for (const { name, total } of this.records) {
+      values.push({ name, duration: formatDuration(total) })
     }
     console.table(values)
   }
 
   list() {
-    Object.keys(this.records).forEach((key, i) => {
-      console.log(color.dim(i + 1 + '.') + color.cyan(' ' + key))
+    this.records.forEach(({ name }, i) => {
+      console.log(color.dim(i + 1 + '.') + color.cyan(' ' + name))
     })
   }
 
   bar() {
-    const barData = Object.entries(this.records)
-      .map(([name, { total }]) => ({
-        name,
-        total: total,
-      }))
-      .sort((a, b) => b.total - a.total)
-    const maxLen = barData[0].total / 300_000
+    this.records.sort((a, b) => b.total - a.total)
+    const maxLen = this.records[0].total / 300_000
     console.log(
       color.green(
         color.bold(
-          'Application'.padEnd(this.nameMaxLen) +
+          'App'.padEnd(this.nameMaxLen) +
             '  Chart'.padEnd(maxLen + 4) +
             '  Duration',
         ),
       ),
     )
-    const unstartedApps: string[] = []
-    for (const { name, total } of barData) {
+    for (const { name, total } of this.records) {
       const duration = formatDuration(total)
-      if (duration === '0ms') {
-        unstartedApps.push(name)
-      } else {
+      if (duration !== '0ms') {
         console.log(
           ' '.repeat(this.nameMaxLen + 2) +
             '■'.repeat(Math.ceil(total / 300_000)).padEnd(maxLen + 4, ' ') +
@@ -91,30 +86,25 @@ export class Logger {
         )
       }
     }
-    return unstartedApps
   }
 
   board() {
-    const values = Object.values(this.records)
     const start = Math.ceil(
-      +getHours(Math.min(...values.map((item) => item.start))),
+      +getHours(Math.min(...this.records.map((item) => item.start))),
     )
     const end = Math.ceil(
-      +getHours(Math.max(...values.map((item) => item.end))),
+      +getHours(Math.max(...this.records.map((item) => item.end))),
     )
     let h = 'Time '.padEnd(this.nameMaxLen - 2)
     for (let i = start; i <= end; i++) {
       h += (i + ':00').padEnd(12)
     }
     console.log(color.bold(color.green(h)))
-    const unusedApps: string[] = []
-    for (const [key, { durations }] of Object.entries(this.records)) {
+    for (const { durations, name } of this.records) {
       const durs = uniqueDurationByHour(durations).sort(
         (a, b) => a.time - b.time,
       )
-      if (durs.length === 0) {
-        unusedApps.push(key)
-      } else {
+      if (durs.length > 0) {
         let str = ' '.repeat(this.nameMaxLen - 2)
         for (let i = 0; i <= end - start; i++) {
           const dur = formatDuration(durs[i]?.duration)
@@ -125,10 +115,9 @@ export class Logger {
           }
         }
         str += '\r'
-        str += color.cyan(key)
+        str += color.cyan(name)
         console.log(str)
       }
     }
-    return unusedApps
   }
 }

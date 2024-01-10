@@ -44,18 +44,19 @@ cli
         ),
       )
       const logger = new Logger(records, date)
-      let unusedApps: string[] = []
       if (table) {
         logger.table()
       } else if (list) {
         logger.list()
       } else if (bar) {
-        unusedApps = logger.bar()
+        logger.bar()
       } else if (web) {
         await startServer(config, records)
       } else {
-        unusedApps = logger.board()
+        logger.board()
       }
+      const unusedApps: string[] = logger.unusedApps
+
       if (unusedApps.length > 0 && detail) {
         console.log(
           '\n' +
