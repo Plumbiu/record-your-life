@@ -1,12 +1,11 @@
 import path from 'node:path'
 import fsp from 'node:fs/promises'
 import { cac } from 'cac'
-import { consola } from 'consola'
 import { Config, Usage } from '@record-your-life/shared'
 import color from 'picocolors'
 import { CONFIG_FILE_PATH, DEFAULT_STORAGE_PATH, __dirname } from './constant'
 import { init } from './init'
-import { Logger } from './logger'
+import { Logger, logError } from './logger'
 import { startServer } from './server'
 import { configInit } from './fsUtils'
 import { highlight } from './utils'
@@ -23,7 +22,7 @@ cli.command('set <storagePath>').action(async (storagePath) => {
       JSON.stringify({ storagePath: writePath }),
     )
   } catch (error: any) {
-    consola.error(error.message)
+    logError(error.message)
   }
 })
 
@@ -71,7 +70,7 @@ cli
         console.log('\n')
       }
     } catch (error: any) {
-      consola.error(error.message)
+      logError(error.message)
     }
   })
 

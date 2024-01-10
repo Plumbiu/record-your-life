@@ -1,8 +1,9 @@
 import { spawn } from 'node:child_process'
 import { getProcessFilePath2Sync, getProcessName2Sync } from 'hmc-win32'
 import { App } from '@record-your-life/shared'
-import coniv from 'iconv-lite'
 import color from 'picocolors'
+
+const textDecoder = new TextDecoder('gbk')
 
 export function getInstalledApps() {
   return new Promise<App>((r) => {
@@ -13,7 +14,7 @@ export function getInstalledApps() {
     ])
     let data = ''
     sp.stdout.on('data', (chunk) => {
-      data += coniv.decode(chunk, 'cp936')
+      data += textDecoder.decode(chunk)
     })
     sp.stdout.on('end', () => {
       const result: App = {}

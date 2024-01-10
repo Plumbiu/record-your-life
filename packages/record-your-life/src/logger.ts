@@ -123,3 +123,7 @@ export class Logger {
     }
   }
 }
+
+export function logError(str: string | number) {
+  console.log(color.red('Error') + str)
+}

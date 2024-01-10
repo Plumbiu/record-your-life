@@ -37,9 +37,7 @@
   "devDependencies": {
     "@record-your-life/shared": "workspace:^",
     "cac": "^6.7.14",
-    "consola": "^3.2.3",
     "hmc-win32": "^1.4.6",
-    "iconv-lite": "^0.6.3",
     "picocolors": "^1.0.0"
   }
 }
