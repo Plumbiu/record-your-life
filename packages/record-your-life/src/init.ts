@@ -29,7 +29,6 @@ function insertRecord(name: string | undefined, onlyInit = false) {
   }
 }
 
-// const EXCLUDES_EXE = ['SearchHost.exe', 'explorer.exe']
 export async function init(timer: number, config: Config) {
   const todayFile = path.join(config.storagePath, `${getYMD()}.json`)
   if (fs.existsSync(todayFile)) {

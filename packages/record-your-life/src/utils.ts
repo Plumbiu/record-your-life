@@ -32,7 +32,7 @@ export function getInstalledApps() {
             }
             i++
           }
-          result[key] = value.join(' ')
+          result[key.toLocaleLowerCase()] = value.join(' ')
         }
         i++
       }
@@ -41,25 +41,28 @@ export function getInstalledApps() {
   })
 }
 
+const EXCLUDES_EXE = ['searchhost', 'explorer', '[system process]']
 export function findApp(apps: App, pid: number | null | undefined) {
   if (pid == null) {
     return
   }
-  const filePath = getProcessFilePath2Sync(pid)
-  if (filePath === null) {
+  const filePath = getProcessFilePath2Sync(pid)?.toLocaleLowerCase()
+  if (filePath == null) {
     return
   }
   if (!apps[filePath]) {
-    const exe = getProcessName2Sync(pid)?.replace('.exe', '')
+    const exe = getProcessName2Sync(pid)?.replace('.exe', '').toLowerCase()
     if (exe) {
+      if (EXCLUDES_EXE.includes(exe)) {
+        return
+      }
       const id = Object.values(apps).find(
-        (app) => app.includes(exe) || exe?.includes(app),
+        (app) =>
+          // eslint-disable-next-line @stylistic/implicit-arrow-linebreak
+          app.toLowerCase().includes(exe) || exe?.includes(app.toLowerCase()),
       )
       return id
     }
-  }
-  if (apps[filePath].length > 35) {
-    return
   }
   return apps[filePath]
 }
