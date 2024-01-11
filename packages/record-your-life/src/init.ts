@@ -44,7 +44,7 @@ export async function init(timer: number, config: Config) {
       }
     } catch (error) {}
   }
-  const apps = await getInstalledApps()
+  const apps = getInstalledApps()
   WatchWindowForeground(async (_curr, prevId, win) => {
     const preApp = findApp(apps, getMainWindow(prevId)?.pid)
     const curApp = findApp(apps, win.pid)

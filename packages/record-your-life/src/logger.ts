@@ -22,21 +22,18 @@ export class Logger {
   constructor(records: Record<string, Usage>, date: string) {
     let amount = 0
     this.date = date
-    this.records = Object.entries(records).map(([name, usage]) => ({
-      name,
-      ...usage,
-    }))
-    for (const { total, name } of this.records) {
-      if (total === 0) {
+    this.records = Object.entries(records).map(([name, usage]) => {
+      if (usage.total === 0) {
         this.unusedApps.push(name)
       } else {
-        amount += total
+        amount += usage.total
         const len = getUtf8Length(name)
         if (len > this.nameMaxLen) {
           this.nameMaxLen = len
         }
       }
-    }
+      return { name, ...usage }
+    })
     this.appLen = this.records.length
     this.amount = formatDuration(amount)
     console.log(
