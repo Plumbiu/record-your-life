@@ -1,5 +1,5 @@
 import { exec, execSync } from 'node:child_process'
-import { writeFile, mkdir } from 'node:fs/promises'
+import { writeFile } from 'node:fs/promises'
 
 execSync('pnpm -F record-your-life run build')
 
@@ -8,10 +8,9 @@ async function initConfig() {
     await writeFile(
       './packages/record-your-life/dist/record-your-life.json',
       JSON.stringify({
-        storagePath: './storage',
+        storagePath: './',
       }),
     )
-    await mkdir('./packages/record-your-life/dist/storage')
   } catch (error) {}
 }
 
