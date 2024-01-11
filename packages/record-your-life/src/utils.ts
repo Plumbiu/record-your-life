@@ -22,6 +22,7 @@ export function getInstalledApps() {
   }
   return formatApps
 }
+
 const EXCLUDES_EXE = ['searchhost', 'explorer', '[system process]']
 export function findApp(apps: App, pid: number | null | undefined) {
   if (pid == null) {
