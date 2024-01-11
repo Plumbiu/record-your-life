@@ -8,7 +8,7 @@ import { findApp, getInstalledApps } from './utils'
 
 const records: Map<string, Usage> = new Map()
 
-function insertRecord(name: string | undefined, onlyInit = false) {
+function updateRecord(name: string | undefined, onlyInit = false) {
   if (!name) {
     return
   }
@@ -51,12 +51,12 @@ export async function init(timer: number, config: Config) {
     if (curApp) {
       const record = records.get(curApp)
       if (!record) {
-        insertRecord(curApp, true)
+        updateRecord(curApp, true)
       } else {
         record.end = Date.now()
       }
     }
-    insertRecord(preApp)
+    updateRecord(preApp)
   })
   setInterval(async () => {
     await fsp.writeFile(todayFile, JSON.stringify(Object.fromEntries(records)))

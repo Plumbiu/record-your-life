@@ -1,48 +1,27 @@
-import { spawn } from 'node:child_process'
-import { getProcessFilePath2Sync, getProcessName2Sync } from 'hmc-win32'
+import {
+  getProcessFilePath2Sync,
+  getProcessName2Sync,
+  listRegistrPath,
+} from 'hmc-win32'
 import { App } from '@record-your-life/shared'
 import color from 'picocolors'
 
-const textDecoder = new TextDecoder('gbk')
-
+const EXE_SUFFIX = '.FriendlyAppName'
 export function getInstalledApps() {
-  return new Promise<App>((r) => {
-    const sp = spawn('REG', [
-      'QUERY',
-      // eslint-disable-next-line @stylistic/max-len
-      'HKEY_CLASSES_ROOT\\Local Settings\\Software\\Microsoft\\Windows\\Shell\\MuiCache',
-    ])
-    let data = ''
-    sp.stdout.on('data', (chunk) => {
-      data += textDecoder.decode(chunk)
-    })
-    sp.stdout.on('end', () => {
-      const result: App = {}
-      const arr = data.split(/\r?\n|\s{2,}/g).filter(Boolean)
-      let i = 0
-      while (i < arr.length) {
-        if (arr[i].endsWith('.FriendlyAppName')) {
-          const key = arr[i].replace('.FriendlyAppName', '')
-          const value: string[] = []
-          i++
-          while (
-            !arr[i].endsWith('.ApplicationCompany') &&
-            !arr[i].endsWith('.FriendlyAppName')
-          ) {
-            if (arr[i] !== 'REG_SZ') {
-              value.push(arr[i])
-            }
-            i++
-          }
-          result[key.toLocaleLowerCase()] = value.join(' ')
-        }
-        i++
-      }
-      r(result)
-    })
-  })
+  const apps = listRegistrPath(
+    'HKEY_CLASSES_ROOT',
+    // eslint-disable-next-line @stylistic/max-len
+    'Local Settings\\Software\\Microsoft\\Windows\\Shell\\MuiCache',
+  )
+  const formatApps: Record<string, string> = {}
+  for (const [key, value] of Object.entries(apps)) {
+    if (key.endsWith(`.exe${EXE_SUFFIX}`)) {
+      formatApps[key.replace(EXE_SUFFIX, ' ').toLocaleLowerCase()] =
+        value.toString()
+    }
+  }
+  return formatApps
 }
-
 const EXCLUDES_EXE = ['searchhost', 'explorer', '[system process]']
 export function findApp(apps: App, pid: number | null | undefined) {
   if (pid == null) {
@@ -52,21 +31,22 @@ export function findApp(apps: App, pid: number | null | undefined) {
   if (filePath == null) {
     return
   }
-  if (!apps[filePath]) {
+  const app = apps[filePath]
+  if (!app) {
     const exe = getProcessName2Sync(pid)?.replace('.exe', '').toLowerCase()
     if (exe) {
       if (EXCLUDES_EXE.includes(exe)) {
         return
       }
       const id = Object.values(apps).find(
-        (app) =>
+        (item) =>
           // eslint-disable-next-line @stylistic/implicit-arrow-linebreak
-          app.toLowerCase().includes(exe) || exe?.includes(app.toLowerCase()),
+          item.toLowerCase().includes(exe) || exe?.includes(item.toLowerCase()),
       )
       return id
     }
   }
-  return apps[filePath]
+  return app
 }
 
 export const highlight = (str: string | number) =>
@@ -75,8 +55,8 @@ export const highlight = (str: string | number) =>
 
 export function getUtf8Length(str: string) {
   let count = 0
-  Object.values(str).forEach((item) => {
-    count += Math.ceil(item.charCodeAt(0).toString(2).length / 8)
-  })
+  for (let i = 0; i < str.length; i++) {
+    count += str[i].charCodeAt(0).toString(2).length / 8
+  }
   return count
 }

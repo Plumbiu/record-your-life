@@ -6,7 +6,8 @@
     "test": "vitest",
     "build": "pnpm -F record-your-life run build && pnpm -F web run build",
     "dev": "esno packages/record-your-life/src/index.ts",
-    "dev:web": "pnpm -F web run dev"
+    "dev:web": "pnpm -F web run dev",
+    "bench": "vitest bench --run"
   },
   "author": "Plumbiu",
   "license": "MIT",
