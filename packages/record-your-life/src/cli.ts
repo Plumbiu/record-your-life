@@ -1,26 +1,20 @@
 import path from 'node:path'
 import fsp from 'node:fs/promises'
 import { cac } from 'cac'
-import { Config, Usage } from '@record-your-life/shared'
+import { Usage } from '@record-your-life/shared'
 import color from 'picocolors'
-import { CONFIG_FILE_PATH, DEFAULT_STORAGE_PATH, __dirname } from './constant'
+import { CONFIG_FILE_PATH, __dirname } from './constant'
 import { init } from './init'
 import { Logger, logError } from './logger'
 import { startServer } from './server'
-import { configInit } from './fsUtils'
 import { highlight } from './utils'
+import config from './record-your-life.json'
 
-const config: Config = configInit()
 const cli = cac('record-your-life')
 
 cli.command('set <storagePath>').action(async (storagePath) => {
-  const writePath =
-    storagePath === '__dirname' ? DEFAULT_STORAGE_PATH : storagePath
   try {
-    await fsp.writeFile(
-      CONFIG_FILE_PATH,
-      JSON.stringify({ storagePath: writePath }),
-    )
+    await fsp.writeFile(CONFIG_FILE_PATH, JSON.stringify({ storagePath }))
   } catch (error: any) {
     logError(error.message)
   }

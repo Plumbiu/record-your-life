@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "test": "vitest",
-    "build": "pnpm -F record-your-life run build && pnpm -F web run build",
+    "build": "esno scripts/build.ts",
     "dev": "esno packages/record-your-life/src/index.ts",
     "dev:web": "pnpm -F web run dev",
     "bench": "vitest bench --run"
