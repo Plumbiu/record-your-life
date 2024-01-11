@@ -57,7 +57,7 @@ export const highlight = (str: string | number) =>
 export function getUtf8Length(str: string) {
   let count = 0
   for (let i = 0; i < str.length; i++) {
-    count += str[i].charCodeAt(0).toString(2).length / 8
+    count += Math.ceil(str[i].charCodeAt(0).toString(2).length / 8)
   }
   return count
 }
