@@ -1,7 +1,7 @@
 import path from 'node:path'
 import fsp from 'node:fs/promises'
 import fs from 'node:fs'
-import { WatchWindowForeground, getMainWindow } from 'hmc-win32'
+import { WatchWindowForeground } from 'hmc-win32'
 import { Config, Usage, getYMD } from '@record-your-life/shared'
 import { __dirname } from './constant'
 import { findApp, getInstalledApps } from './utils'
@@ -45,9 +45,8 @@ export async function init(timer: number, config: Config) {
     } catch (error) {}
   }
   const apps = getInstalledApps()
-  let closedApp: string | undefined
-  WatchWindowForeground(async (_curr, prevId, win) => {
-    const preApp = findApp(apps, getMainWindow(prevId)?.pid)
+  let preApp: string | undefined
+  WatchWindowForeground(async (_curr, _prevId, win) => {
     const curApp = findApp(apps, win.pid)
     if (curApp) {
       const record = records.get(curApp)
@@ -57,12 +56,8 @@ export async function init(timer: number, config: Config) {
         record.end = Date.now()
       }
     }
-    if (preApp) {
-      updateRecord(preApp)
-    } else {
-      updateRecord(closedApp)
-    }
-    closedApp = curApp
+    updateRecord(preApp)
+    preApp = curApp
   })
   setInterval(async () => {
     await fsp.writeFile(todayFile, JSON.stringify(Object.fromEntries(records)))
