@@ -2,14 +2,6 @@
 
 > 记录你的 windows 应用使用时间
 
-> [!NOTE]  
-> 0.1.0 之前的版本计时有问题，建议停掉计划任务，安装最新版本
-> 0.2.0 之后支持命令行一键自启动
-
-![terminal](./resource/terminal.png)
-
-![web](./resource/web.png)
-
 # 安装
 
 1. npm 安装
@@ -42,6 +34,12 @@ record-your-life init
 
 > [!NOTE]
 > 如果希望断电可以使用，请 **右键此电脑 -> 管理 -> 任务计划程序 -> 任务计划程序库 -> 找到名称为 RecordYourLife 的任务 -> 在条件一栏中将 "只有在计算机使用交流电源..." 取消掉**
+
+# 效果
+
+![terminal](./resource/terminal.png)
+
+![web](./resource/web.png)
 
 # 使用
 
