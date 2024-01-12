@@ -22,18 +22,20 @@ export class Logger {
   constructor(records: Record<string, Usage>, date: string) {
     let amount = 0
     this.date = date
-    this.records = Object.entries(records).map(([name, usage]) => {
-      if (usage.total === 0) {
-        this.unusedApps.push(name)
-      } else {
-        amount += usage.total
-        const len = getUtf8Length(name)
-        if (len > this.nameMaxLen) {
-          this.nameMaxLen = len
+    this.records = Object.entries(records)
+      .map(([name, usage]) => {
+        if (usage.total === 0) {
+          this.unusedApps.push(name)
+        } else {
+          amount += usage.total
+          const len = getUtf8Length(name)
+          if (len > this.nameMaxLen) {
+            this.nameMaxLen = len
+          }
         }
-      }
-      return { name, ...usage }
-    })
+        return { name, ...usage }
+      })
+      .sort((a, b) => b.total - a.total)
     this.appLen = this.records.length
     this.amount = formatDuration(amount)
     console.log(
@@ -47,13 +49,12 @@ export class Logger {
   }
 
   table() {
-    const values: Array<{ name: string; duration: string }> = []
-    for (const { name, total } of this.records) {
-      if (total) {
-        values.push({ name, duration: formatDuration(total) })
-      }
-    }
-    console.table(values)
+    console.table(
+      this.records.map(({ name, total }) => ({
+        name,
+        duration: formatDuration(total),
+      })),
+    )
   }
 
   list() {
@@ -63,7 +64,6 @@ export class Logger {
   }
 
   bar() {
-    this.records.sort((a, b) => b.total - a.total)
     const maxLen = this.records[0].total / 300_000
     console.log(
       color.green(
@@ -89,22 +89,26 @@ export class Logger {
   }
 
   board() {
-    const start = Math.ceil(
-      +getHours(Math.min(...this.records.map((item) => item.start))),
-    )
-    const end = Math.ceil(
-      +getHours(Math.max(...this.records.map((item) => item.end))),
-    )
-    const PEND_LEN = 9
+    let start = Number.POSITIVE_INFINITY
+    let end = -1
+    for (const record of this.records) {
+      if (start > record.start) {
+        start = record.start
+      }
+      if (end < record.end) {
+        end = record.end
+      }
+    }
+    start = Math.ceil(+getHours(start))
+    end = Math.ceil(+getHours(end))
+    const PEND_LEN = 8
     let h = 'Time '.padEnd(this.nameMaxLen) + ' '
     for (let i = start; i <= end; i++) {
       h += (i + ':00').padEnd(PEND_LEN)
     }
     console.log(color.bold(color.green(h)))
     for (const { durations, name } of this.records) {
-      const durs = uniqueDurationByHour(durations).sort(
-        (a, b) => a.time - b.time,
-      )
+      const durs = uniqueDurationByHour(durations)
       if (durs.length > 0) {
         let str = ' '.repeat(this.nameMaxLen) + ' '
         for (let i = 0; i <= end - start; i++) {
