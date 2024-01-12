@@ -13,6 +13,7 @@ import {
         <template #icon>
           <BorderlessTableOutlined />
         </template>
+        表格
       </Button>
     </div>
     <div class="sider-item">
@@ -20,6 +21,7 @@ import {
         <template #icon>
           <BarChartOutlined />
         </template>
+        图表
       </Button>
     </div>
   </div>

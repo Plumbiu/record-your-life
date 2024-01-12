@@ -8,8 +8,9 @@ import { init } from './init'
 import { Logger, logError } from './logger'
 import { startServer } from './server'
 import { highlight } from './utils'
-import config from './record-your-life.json'
+import { initConfig } from './fsUtils'
 
+const config = initConfig()
 const cli = cac('record-your-life')
 
 cli.command('set <storagePath>').action(async (storagePath) => {

@@ -18,11 +18,13 @@ const records = ref<TableDataType[]>([])
 const raw: Record<string, Omit<TableDataType, 'name'>> = JSON.parse(
   await invoke('get_data', { date: '2024-01-11' }),
 )
-records.value = Object.entries(raw).map(([name, usage]) => ({
-  name,
-  ...usage,
-  key: name,
-}))
+records.value = Object.entries(raw)
+  .filter(([_, { total }]) => total !== 0)
+  .map(([name, usage]) => ({
+    name,
+    ...usage,
+    key: name,
+  }))
 console.log(raw)
 
 const columns = [
@@ -65,7 +67,9 @@ const total = computed(() => {
             <TypographyText type="success">总结</TypographyText>
           </TableSummaryCell>
           <TableSummaryCell>
-            <TypographyText type="success">{{ formatDuration(total) }}</TypographyText>
+            <TypographyText type="success">
+              {{ formatDuration(total) }}
+            </TypographyText>
           </TableSummaryCell>
         </TableSummaryRow>
       </template>
