@@ -35,7 +35,7 @@ record-your-life set STORAGE_PATH
 record-your-life init
 ```
 
-重启即可
+运行后，重启即可
 
 > 默认情况下，`record-your-life` 5min 中会进行写入操作，可以在 `init` 后面添加参数，例如 `record-your-life init 10000` 10s 进行一次写入
 
