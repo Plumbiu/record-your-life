@@ -92,7 +92,9 @@ cli.command('watch [timer]', 'init record your life').action(async (timer) => {
 cli.command('init [timer]').action((timer) => {
   exec(
     // eslint-disable-next-line @stylistic/max-len
-    `schtasks /create /tn RecordYourLife /sc ONLOGON /tr "powershell -windowstyle hidden -command 'record-your-life watch ${timer}'"`,
+    `schtasks /create /tn RecordYourLife /sc ONLOGON /tr "powershell -windowstyle hidden -command 'record-your-life watch ${
+      timer ?? 300_000
+    }'"`,
     (err) => {
       if (err) {
         logError(err.message)
