@@ -16,7 +16,7 @@ export function getInstalledApps() {
   const formatApps: Record<string, string> = {}
   for (const [key, value] of Object.entries(apps)) {
     if (key.endsWith(`.exe${EXE_SUFFIX}`)) {
-      formatApps[key.replace(EXE_SUFFIX, ' ').toLocaleLowerCase()] =
+      formatApps[key.replace(EXE_SUFFIX, '').toLocaleLowerCase()] =
         value.toString()
     }
   }
