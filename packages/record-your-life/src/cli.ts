@@ -67,9 +67,8 @@ cli
         for (const app of unusedApps) {
           console.log(color.cyan(app))
         }
-      } else {
-        console.log('\n')
       }
+      console.log('\n')
     } catch (error: any) {
       logError(error.message)
     }

@@ -12,7 +12,7 @@ interface LogUsage extends Usage {
 }
 
 export class Logger {
-  records: LogUsage[]
+  records: LogUsage[] = []
   nameMaxLen: number = -1
   date: string
   amount: string
@@ -22,20 +22,21 @@ export class Logger {
   constructor(records: Record<string, Usage>, date: string) {
     let amount = 0
     this.date = date
-    this.records = Object.entries(records)
-      .map(([name, usage]) => {
-        if (usage.total === 0) {
-          this.unusedApps.push(name)
-        } else {
-          amount += usage.total
-          const len = getUtf8Length(name)
-          if (len > this.nameMaxLen) {
-            this.nameMaxLen = len
-          }
+    for (const [name, usage] of Object.entries(records)) {
+      if (usage.total === 0) {
+        this.unusedApps.push(name)
+      } else {
+        this.records.push({
+          name,
+          ...usage,
+        })
+        amount += usage.total
+        const len = getUtf8Length(name)
+        if (len > this.nameMaxLen) {
+          this.nameMaxLen = len
         }
-        return { name, ...usage }
-      })
-      .sort((a, b) => b.total - a.total)
+      }
+    }
     this.appLen = this.records.length
     this.amount = formatDuration(amount)
     console.log(
