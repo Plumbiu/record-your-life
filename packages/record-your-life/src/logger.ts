@@ -130,5 +130,5 @@ export class Logger {
 }
 
 export function logError(str: string | number) {
-  console.log(color.red('Error ') + str)
+  console.log(color.red('Error: ' + str) + '\n')
 }

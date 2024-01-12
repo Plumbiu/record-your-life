@@ -1,5 +1,7 @@
 import path from 'node:path'
 import fsp from 'node:fs/promises'
+import { exec } from 'node:child_process'
+import { existsSync } from 'node:fs'
 import { cac } from 'cac'
 import { Usage, getYMD } from '@record-your-life/shared'
 import color from 'picocolors'
@@ -15,7 +17,13 @@ const cli = cac('record-your-life')
 
 cli.command('set <storagePath>').action(async (storagePath) => {
   try {
+    if (!existsSync(storagePath)) {
+      throw new Error('no such directory')
+    }
     await fsp.writeFile(CONFIG_FILE_PATH, JSON.stringify({ storagePath }))
+    console.log(
+      'successfuly set storage path: ' + color.green(storagePath) + '\n',
+    )
   } catch (error: any) {
     logError(error.message)
   }
@@ -74,11 +82,25 @@ cli
     }
   })
 
-cli.command('init [timer]', 'init record your life').action(async (timer) => {
+cli.command('watch [timer]', 'init record your life').action(async (timer) => {
   if (timer < 1000) {
     return
   }
   await init(timer ?? 300_000, config) // 5 min = 5 * 60 * 1000
+})
+
+cli.command('init [timer]').action((timer) => {
+  exec(
+    // eslint-disable-next-line @stylistic/max-len
+    `schtasks /create /tn RecordYourLife /sc ONLOGON /tr "powershell -windowstyle hidden -command 'record-your-life watch ${timer}'"`,
+    (err) => {
+      if (err) {
+        logError(err.message)
+        return
+      }
+      console.log(color.green('successful init'))
+    },
+  )
 })
 
 cli.help()
