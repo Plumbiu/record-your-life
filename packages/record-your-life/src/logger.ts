@@ -42,7 +42,7 @@ export class Logger {
     this.amount = formatDuration(amount)
     console.log(
       color.dim('\nYou use ') +
-        highlight(this.appLen - this.unusedApps.length) +
+        highlight(this.appLen) +
         color.dim(' apps on ') +
         highlight(this.date) +
         color.dim(', totally ') +
