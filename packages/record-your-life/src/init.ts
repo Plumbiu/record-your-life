@@ -45,6 +45,7 @@ export async function init(timer: number, config: Config) {
     } catch (error) {}
   }
   const apps = getInstalledApps()
+  let closedApp: string | undefined
   WatchWindowForeground(async (_curr, prevId, win) => {
     const preApp = findApp(apps, getMainWindow(prevId)?.pid)
     const curApp = findApp(apps, win.pid)
@@ -56,7 +57,12 @@ export async function init(timer: number, config: Config) {
         record.end = Date.now()
       }
     }
-    updateRecord(preApp)
+    if (preApp) {
+      updateRecord(preApp)
+    } else {
+      updateRecord(closedApp)
+    }
+    closedApp = curApp
   })
   setInterval(async () => {
     await fsp.writeFile(todayFile, JSON.stringify(Object.fromEntries(records)))

@@ -24,6 +24,7 @@ export function getInstalledApps() {
 }
 
 const EXCLUDES_EXE = ['searchhost', 'explorer', '[system process]']
+const EXCLURES_APP = ['Windows 资源管理器']
 export function findApp(apps: App, pid: number | null | undefined) {
   if (pid == null) {
     return
@@ -46,6 +47,9 @@ export function findApp(apps: App, pid: number | null | undefined) {
       )
       return id
     }
+  }
+  if (EXCLURES_APP.includes(app)) {
+    return
   }
   return app
 }
