@@ -40,6 +40,10 @@ record-your-life init
 
 > 默认情况下，`record-your-life` 5min 中会进行写入操作，可以在 `init` 后面添加参数，例如 `record-your-life init 10000` 10s 进行一次写入
 
+> [!NOTE]
+> 如果希望断电可以使用，请 **右键此电脑 -> 管理 -> 任务计划程序 -> 任务计划程序库 -> 找到名称为 RecordYourLife 的任务 -> 在条件一栏中将 "只有在计算机使用交流电源..." 取消掉**
+
+
 # 使用
 
 > [!NOTE]  
