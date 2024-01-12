@@ -1,7 +1,7 @@
 import path from 'node:path'
 import fsp from 'node:fs/promises'
 import { cac } from 'cac'
-import { Usage } from '@record-your-life/shared'
+import { Usage, getYMD } from '@record-your-life/shared'
 import color from 'picocolors'
 import { CONFIG_FILE_PATH, __dirname } from './constant'
 import { init } from './init'
@@ -22,7 +22,7 @@ cli.command('set <storagePath>').action(async (storagePath) => {
 })
 
 cli
-  .command('<date>')
+  .command('[date]')
   .option('--table', 'Table format of usage')
   .option('--bar', 'Bar chat format of usage')
   .option('--board', 'Board chat format of usage')
@@ -31,12 +31,18 @@ cli
   .option('--detail', 'Show the unused apps')
   .action(async (date: string, { table, list, bar, web, board, detail }) => {
     try {
-      const records: Record<string, Usage> = JSON.parse(
-        await fsp.readFile(
-          path.join(config.storagePath, `${date}.json`),
-          'utf-8',
-        ),
+      if (!date) {
+        date = getYMD()
+        console.log(date)
+      }
+      const content = await fsp.readFile(
+        path.join(config.storagePath, `${date}.json`),
+        'utf-8',
       )
+      if (!content) {
+        throw new Error('empty data, please wait 5 min as least')
+      }
+      const records: Record<string, Usage> = JSON.parse(content)
       const logger = new Logger(records, date)
       if (table) {
         logger.table()
