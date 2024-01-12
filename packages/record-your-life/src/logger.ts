@@ -37,6 +37,7 @@ export class Logger {
         }
       }
     }
+    this.records.sort((a, b) => b.total - a.total)
     this.appLen = this.records.length
     this.amount = formatDuration(amount)
     console.log(
