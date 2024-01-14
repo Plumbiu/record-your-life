@@ -2,7 +2,7 @@ import path from 'node:path'
 import fsp from 'node:fs/promises'
 import fs from 'node:fs'
 import { Config, Usage, getYMD } from '@record-your-life/shared'
-import { getCachedApps } from './third_party/index'
+import { getCachedApps } from 'win-active-app-rs'
 import { __dirname } from './constant'
 import { findApp, watchForegroundWindow } from './utils'
 
