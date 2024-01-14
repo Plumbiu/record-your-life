@@ -1,58 +1,7 @@
-import {
-  getProcessFilePath2Sync,
-  getProcessName2Sync,
-  listRegistrPath,
-} from 'hmc-win32'
-import { App } from '@record-your-life/shared'
+import path from 'node:path'
+import { getCurrentAppPath } from 'win-active-app-rs'
 import color from 'picocolors'
-
-const EXE_SUFFIX = '.FriendlyAppName'
-export function getInstalledApps() {
-  const apps = listRegistrPath(
-    'HKEY_CLASSES_ROOT',
-    // eslint-disable-next-line @stylistic/max-len
-    'Local Settings\\Software\\Microsoft\\Windows\\Shell\\MuiCache',
-  )
-  const formatApps: Record<string, string> = {}
-  for (const [key, value] of Object.entries(apps)) {
-    if (key.endsWith(`.exe${EXE_SUFFIX}`)) {
-      formatApps[key.replace(EXE_SUFFIX, '').toLocaleLowerCase()] =
-        value.toString()
-    }
-  }
-  return formatApps
-}
-
-const EXCLUDES_EXE = ['searchhost', 'explorer', '[system process]']
-const EXCLURES_APP = ['Windows 资源管理器']
-export function findApp(apps: App, pid: number | null | undefined) {
-  if (pid == null) {
-    return
-  }
-  const filePath = getProcessFilePath2Sync(pid)?.toLocaleLowerCase()
-  if (filePath == null) {
-    return
-  }
-  const app = apps[filePath]
-  if (!app) {
-    const exe = getProcessName2Sync(pid)?.replace('.exe', '').toLowerCase()
-    if (exe) {
-      if (EXCLUDES_EXE.includes(exe)) {
-        return
-      }
-      const id = Object.values(apps).find(
-        (item) =>
-          // eslint-disable-next-line @stylistic/implicit-arrow-linebreak
-          item.toLowerCase().includes(exe) || exe?.includes(item.toLowerCase()),
-      )
-      return id
-    }
-  }
-  if (EXCLURES_APP.includes(app)) {
-    return
-  }
-  return app
-}
+import { App } from '@record-your-life/shared'
 
 export const highlight = (str: string | number) =>
   // eslint-disable-next-line @stylistic/implicit-arrow-linebreak
@@ -64,4 +13,35 @@ export function getUtf8Length(str: string) {
     count += Math.ceil(str[i].charCodeAt(0).toString(2).length / 8)
   }
   return count
+}
+export function findApp(apps: App, p: string) {
+  const app = apps?.[p]
+  if (!app) {
+    const exe = path.basename(p).replace('.exe', '')
+    return Object.values(apps).find((name) => {
+      const loName = name.toLocaleLowerCase()
+      return loName.includes(exe) || exe.includes(loName)
+    })
+  }
+  return app
+}
+
+async function sleep() {
+  return new Promise((r) => setTimeout(r, 350))
+}
+
+export async function watchForegroundWindow(cb: (exePath: string) => void) {
+  let oldpath = getCurrentAppPath()
+  while (true) {
+    const newPath = getCurrentAppPath()
+    console.log(newPath)
+
+    if (newPath && newPath !== oldpath) {
+      if (cb) {
+        cb(newPath)
+        oldpath = newPath
+      }
+    }
+    await sleep()
+  }
 }

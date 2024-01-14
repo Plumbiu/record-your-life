@@ -1,9 +1,10 @@
 import { spawn } from 'node:child_process'
 import { App } from '@record-your-life/shared'
+import { listRegistrPath } from 'hmc-win32'
 
 const textDecoder = new TextDecoder('utf8')
 
-export function getInstalledApps() {
+export function getInstalledApps_REG() {
   return new Promise<App>((r) => {
     const sp = spawn('REG', [
       'QUERY',
@@ -39,4 +40,21 @@ export function getInstalledApps() {
       r(result)
     })
   })
+}
+
+const EXE_SUFFIX = '.FriendlyAppName'
+export function getInstalledApps_HMC() {
+  const apps = listRegistrPath(
+    'HKEY_CLASSES_ROOT',
+    // eslint-disable-next-line @stylistic/max-len
+    'Local Settings\\Software\\Microsoft\\Windows\\Shell\\MuiCache',
+  )
+  const formatApps: Record<string, string> = {}
+  for (const [key, value] of Object.entries(apps)) {
+    if (key.endsWith(`.exe${EXE_SUFFIX}`)) {
+      formatApps[key.replace(EXE_SUFFIX, '').toLocaleLowerCase()] =
+        value.toString()
+    }
+  }
+  return formatApps
 }

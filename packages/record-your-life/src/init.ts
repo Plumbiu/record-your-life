@@ -1,10 +1,10 @@
 import path from 'node:path'
 import fsp from 'node:fs/promises'
 import fs from 'node:fs'
-import { WatchWindowForeground } from 'hmc-win32'
 import { Config, Usage, getYMD } from '@record-your-life/shared'
+import { getCachedApps } from 'win-active-app-rs'
 import { __dirname } from './constant'
-import { findApp, getInstalledApps } from './utils'
+import { findApp, watchForegroundWindow } from './utils'
 
 const records: Map<string, Usage> = new Map()
 
@@ -44,10 +44,11 @@ export async function init(timer: number, config: Config) {
       }
     } catch (error) {}
   }
-  const apps = getInstalledApps()
+  const apps = getCachedApps()
+  console.log(apps)
   let preApp: string | undefined
-  WatchWindowForeground(async (_curr, _prevId, win) => {
-    const curApp = findApp(apps, win.pid)
+  watchForegroundWindow(async (p) => {
+    const curApp = findApp(apps, p)
     if (curApp) {
       const record = records.get(curApp)
       if (!record) {

@@ -1,11 +1,16 @@
 import { bench } from 'vitest'
-import { getInstalledApps as getNew } from '../../utils'
-import { getInstalledApps as getOld } from './old'
+import { getCachedApps } from 'win-active-app-rs'
+import { getInstalledApps_REG, getInstalledApps_HMC } from './old'
 
-bench('getInstalledApps - old', async () => {
-  await getOld()
+// Too slow, skip it
+bench.skip('getInstalledApps - reg', async () => {
+  await getInstalledApps_REG()
 })
 
-bench('getInstalledApps - new', async () => {
-  getNew()
+bench('getInstalledApps - hmc', () => {
+  getInstalledApps_HMC()
+})
+
+bench('getInstalledApps - win-active-app-rs', () => {
+  getCachedApps()
 })
