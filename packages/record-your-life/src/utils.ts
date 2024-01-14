@@ -1,7 +1,7 @@
 import path from 'node:path'
-import { getCurrentAppPath } from 'win-active-app-rs'
 import color from 'picocolors'
 import { App } from '@record-your-life/shared'
+import { getCurrentAppPath } from './third_party/index'
 
 export const highlight = (str: string | number) =>
   // eslint-disable-next-line @stylistic/implicit-arrow-linebreak
@@ -34,8 +34,6 @@ export async function watchForegroundWindow(cb: (exePath: string) => void) {
   let oldpath = getCurrentAppPath()
   while (true) {
     const newPath = getCurrentAppPath()
-    console.log(newPath)
-
     if (newPath && newPath !== oldpath) {
       if (cb) {
         cb(newPath)

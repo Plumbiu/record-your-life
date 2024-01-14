@@ -2,7 +2,7 @@ import path from 'node:path'
 import fsp from 'node:fs/promises'
 import fs from 'node:fs'
 import { Config, Usage, getYMD } from '@record-your-life/shared'
-import { getCachedApps } from 'win-active-app-rs'
+import { getCachedApps } from './third_party/index'
 import { __dirname } from './constant'
 import { findApp, watchForegroundWindow } from './utils'
 
@@ -45,7 +45,6 @@ export async function init(timer: number, config: Config) {
     } catch (error) {}
   }
   const apps = getCachedApps()
-  console.log(apps)
   let preApp: string | undefined
   watchForegroundWindow(async (p) => {
     const curApp = findApp(apps, p)
