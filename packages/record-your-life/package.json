@@ -1,6 +1,6 @@
 {
   "name": "record-your-life",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Record your app usage",
   "type": "module",
   "main": "./dist/index.js",
@@ -38,7 +38,9 @@
     "@record-your-life/shared": "workspace:^",
     "cac": "^6.7.14",
     "hmc-win32": "^1.4.9",
-    "picocolors": "^1.0.0",
+    "picocolors": "^1.0.0"
+  },
+  "dependencies": {
     "win-active-app-rs": "^0.0.4"
   }
 }
