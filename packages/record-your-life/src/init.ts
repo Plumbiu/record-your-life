@@ -48,8 +48,6 @@ export async function init(timer: number, config: Config) {
   let preApp: string | undefined
   watchForegroundWindow(async (p) => {
     const curApp = findApp(apps, p)
-    console.log(curApp)
-
     if (curApp) {
       const record = records.get(curApp)
       if (!record) {

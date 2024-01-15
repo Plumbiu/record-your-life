@@ -15,8 +15,6 @@ export function getUtf8Length(str: string) {
   return count
 }
 export function findApp(apps: App, p: string) {
-  console.log({ apps, p })
-
   const app = apps?.[p]
   if (!app) {
     const exe = path.basename(p).replace('.exe', '')
