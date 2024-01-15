@@ -15,6 +15,8 @@ export function getUtf8Length(str: string) {
   return count
 }
 export function findApp(apps: App, p: string) {
+  console.log({ apps, p })
+
   const app = apps?.[p]
   if (!app) {
     const exe = path.basename(p).replace('.exe', '')
@@ -35,7 +37,7 @@ export async function watchForegroundWindow(cb: (exePath: string) => void) {
   while (true) {
     const newPath = getCurrentAppPath()
     if (newPath && newPath !== oldpath) {
-      cb(newPath)
+      cb(newPath.toLocaleLowerCase())
       oldpath = newPath
     }
     await sleep()
