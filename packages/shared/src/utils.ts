@@ -12,7 +12,10 @@ export function getYMD() {
 export function toFixed(n: number, fixed = 2) {
   return n.toFixed(fixed)
 }
-export function formatDuration(time: number, fixed = 2) {
+export function formatDuration(time: number | undefined, fixed = 2) {
+  if (time === undefined || time === 0) {
+    return
+  }
   let r: string = time + 'ms'
   if (time > 3600_000) {
     r = `${toFixed(time / 3600_000, fixed)}h`
@@ -38,15 +41,30 @@ export function getHours(time: number) {
 }
 
 export function uniqueDurationByHour(durations: Duration[]) {
-  const tmp: Record<string, {
-    time: number
-    duration: number
-  }> = {}
+  const tmp: Record<string, number> = {}
+  let start = +getHours(durations[0].time)
+  let curDur
+  const end = +getHours(durations[durations.length - 1].time)
   for (const { duration, time } of durations) {
-    const fmtTime = getHours(time)
-    tmp[fmtTime] = { time, duration }
+    if (duration) {
+      if (!curDur) {
+        curDur = duration
+      }
+      const fmtTime = getHours(time)
+      tmp[fmtTime] = duration
+    }
   }
-  return Object.values(tmp)
+  for (let i = start; i <= end; i++) {
+    const key = pad(i)
+    if (!tmp[key]) {
+      if (curDur) {
+        tmp[key] = curDur
+      }
+    }
+    curDur = tmp[key]
+  }
+
+  return Object.values(tmp).sort((a, b) => a - b)
 }
 
 export function resolveTimeArea(i: number) {

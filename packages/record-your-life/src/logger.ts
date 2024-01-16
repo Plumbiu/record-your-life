@@ -39,7 +39,7 @@ export class Logger {
     }
     this.records.sort((a, b) => b.total - a.total)
     this.appLen = this.records.length
-    this.amount = formatDuration(amount)
+    this.amount = formatDuration(amount) ?? '0ms'
     console.log(
       color.dim('\nYou use ') +
         highlight(this.appLen) +
@@ -103,8 +103,8 @@ export class Logger {
     }
     start = Math.ceil(+getHours(start))
     end = Math.ceil(+getHours(end))
-    const PEND_LEN = 8
-    let h = 'Time '.padEnd(this.nameMaxLen) + ' '
+    const PEND_LEN = 9
+    let h = 'Time '.padEnd(this.nameMaxLen + 2)
     for (let i = start; i <= end; i++) {
       h += (i + ':00').padEnd(PEND_LEN)
     }
@@ -112,10 +112,10 @@ export class Logger {
     for (const { durations, name } of this.records) {
       const durs = uniqueDurationByHour(durations)
       if (durs.length > 0) {
-        let str = ' '.repeat(this.nameMaxLen) + ' '
+        let str = ' '.repeat(this.nameMaxLen) + '  '
         for (let i = 0; i <= end - start; i++) {
-          const dur = formatDuration(durs[i]?.duration, 1)
-          if (dur === 'undefinedms') {
+          const dur = formatDuration(durs[i], 1)
+          if (dur === undefined) {
             str = ' '.repeat(PEND_LEN) + str
           } else {
             str += dur.padEnd(PEND_LEN, ' ')
