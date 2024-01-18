@@ -1,4 +1,7 @@
 {
   "extends": "@plumbiu",
-  "ignorePatterns": ["**/third-party/**"]
+  "ignorePatterns": [],
+  "rules": {
+    "@stylistic/array-element-newline": "off"
+  }
 }
