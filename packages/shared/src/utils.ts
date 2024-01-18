@@ -73,7 +73,3 @@ export function uniqueDurationByHour(durations: Duration[]) {
 
   return Object.values(tmp).sort((a, b) => a - b)
 }
-
-export function resolveTimeArea(i: number) {
-  return i > 12 ? 'pm' : 'am'
-}

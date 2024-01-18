@@ -1,5 +1,71 @@
-import color from 'picocolors'
+import path from 'node:path'
+import fsp from 'node:fs/promises'
+import fs, { readFileSync } from 'node:fs'
 import { WindowInfo, activeWindow } from '@miniben90/x-win'
+import color from 'picocolors'
+import { Config, Usage, getYMD } from '@record-your-life/shared'
+import { __dirname, CONFIG_FILE_PATH } from './constant'
+
+const records: Map<string, Usage> = new Map()
+
+export function initConfig() {
+  const config = JSON.parse(readFileSync(CONFIG_FILE_PATH, 'utf-8'))
+  return config as Config
+}
+
+function updateRecord(name: string | undefined, onlyInit = false) {
+  if (!name) {
+    return
+  }
+  name = name.replace('.exe', '')
+  const record = records.get(name)
+  const now = Date.now()
+  if (!record || onlyInit) {
+    records.set(name, {
+      total: 0,
+      end: now,
+      start: now,
+      durations: [],
+    })
+  } else {
+    record.durations.push({ time: now, duration: record.total })
+    record.total += now - record.end
+    record.end = now
+  }
+}
+
+export async function init(timer: number, config: Config) {
+  const todayFile = path.join(config.storagePath, `${getYMD()}.json`)
+  if (fs.existsSync(todayFile)) {
+    try {
+      const content: Record<string, Usage> = JSON.parse(
+        await fsp.readFile(todayFile, 'utf-8'),
+      )
+
+      if (content) {
+        for (const [key, value] of Object.entries(content)) {
+          records.set(key, value)
+        }
+      }
+    } catch (error) {}
+  }
+  let preApp: WindowInfo | undefined
+  watchForegroundWindow(async (curApp) => {
+    if (curApp) {
+      const record = records.get(curApp.info.name)
+      if (!record) {
+        updateRecord(curApp.info.name, true)
+      } else {
+        record.end = Date.now()
+      }
+    }
+    updateRecord(preApp?.info.name)
+    preApp = curApp
+  })
+  setInterval(async () => {
+    await fsp.writeFile(todayFile, JSON.stringify(Object.fromEntries(records)))
+  }, timer)
+}
 
 export const highlight = (str: string | number) =>
   // eslint-disable-next-line @stylistic/implicit-arrow-linebreak
