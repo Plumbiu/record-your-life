@@ -1,6 +1,6 @@
 /* eslint-disable @stylistic/max-len */
 import { exec, execSync } from 'node:child_process'
-import { copyFile, writeFile } from 'node:fs/promises'
+import { copyFile, readdir, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 
 const stdout = execSync('pnpm -F record-your-life run build', {
@@ -23,20 +23,23 @@ async function initConfig() {
 
 async function copyBindingNode() {
   try {
-    const packagePath = path.join(
+    const miniBenPath = path.join(
       RECORD_YOUR_LIFE,
       'node_modules',
-      'win-active-app-rs',
+      '@miniben90',
     )
-    const nodes = [
-      'win-active-app-rs.win32-arm64-msvc.node',
-      'win-active-app-rs.win32-ia32-msvc.node',
-      'win-active-app-rs.win32-x64-msvc.node',
-    ]
-    for (const node of nodes) {
-      console.log('copy ' + node)
-      await copyFile(path.join(packagePath, node), path.join(DIST, node))
-    }
+    const nodes = await readdir(miniBenPath)
+    await Promise.all(
+      nodes.map(async (node) => {
+        if (node.startsWith('x-win-')) {
+          const nodeName = `x-win.${node.replace('x-win-', '')}.node`
+          const nodePath = path.join(miniBenPath, node, nodeName)
+          console.log(nodePath)
+
+          await copyFile(nodePath, path.join(DIST, nodeName))
+        }
+      }),
+    )
   } catch (error) {}
 }
 

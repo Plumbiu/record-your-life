@@ -1,6 +1,6 @@
 # record-your-life
 
-> 记录你的 windows 应用使用时间
+> 记录你的 windows/linux/macos 应用使用时间
 
 # 安装
 

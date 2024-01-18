@@ -2,9 +2,9 @@ import path from 'node:path'
 import fsp from 'node:fs/promises'
 import fs from 'node:fs'
 import { Config, Usage, getYMD } from '@record-your-life/shared'
-import { getCachedApps } from 'win-active-app-rs'
+import { WindowInfo } from '@miniben90/x-win'
 import { __dirname } from './constant'
-import { findApp, watchForegroundWindow } from './utils'
+import { watchForegroundWindow } from './utils'
 
 const records: Map<string, Usage> = new Map()
 
@@ -44,19 +44,17 @@ export async function init(timer: number, config: Config) {
       }
     } catch (error) {}
   }
-  const apps = getCachedApps()
-  let preApp: string | undefined
-  watchForegroundWindow(async (p) => {
-    const curApp = findApp(apps, p)
+  let preApp: WindowInfo | undefined
+  watchForegroundWindow(async (curApp) => {
     if (curApp) {
-      const record = records.get(curApp)
+      const record = records.get(curApp.info.name)
       if (!record) {
-        updateRecord(curApp, true)
+        updateRecord(curApp.info.name, true)
       } else {
         record.end = Date.now()
       }
     }
-    updateRecord(preApp)
+    updateRecord(preApp?.info.name)
     preApp = curApp
   })
   setInterval(async () => {

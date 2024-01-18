@@ -1,7 +1,5 @@
-import path from 'node:path'
 import color from 'picocolors'
-import { App } from '@record-your-life/shared'
-import { getCurrentAppPath } from 'win-active-app-rs'
+import { WindowInfo, activeWindow } from '@miniben90/x-win'
 
 export const highlight = (str: string | number) =>
   // eslint-disable-next-line @stylistic/implicit-arrow-linebreak
@@ -14,28 +12,17 @@ export function getUtf8Length(str: string) {
   }
   return count
 }
-export function findApp(apps: App, p: string) {
-  const app = apps?.[p]
-  if (!app) {
-    const exe = path.basename(p).replace('.exe', '')
-    return Object.values(apps).find((name) => {
-      const loName = name.toLocaleLowerCase()
-      return loName.includes(exe) || exe.includes(loName)
-    })
-  }
-  return app
-}
 
 async function sleep() {
   return new Promise((r) => setTimeout(r, 350))
 }
 
-export async function watchForegroundWindow(cb: (exePath: string) => void) {
-  let oldpath = getCurrentAppPath()
+export async function watchForegroundWindow(cb: (info: WindowInfo) => void) {
+  let oldpath = activeWindow()
   while (true) {
-    const newPath = getCurrentAppPath()
-    if (newPath && newPath !== oldpath) {
-      cb(newPath.toLocaleLowerCase())
+    const newPath = activeWindow()
+    if (newPath && newPath.info.path !== oldpath.info.path) {
+      cb(newPath)
       oldpath = newPath
     }
     await sleep()

@@ -37,8 +37,16 @@
   "devDependencies": {
     "@record-your-life/shared": "workspace:^",
     "cac": "^6.7.14",
-    "hmc-win32": "^1.4.9",
-    "picocolors": "^1.0.0",
-    "win-active-app-rs": "^0.1.1"
+    "picocolors": "^1.0.0"
+  },
+  "dependencies": {
+    "@miniben90/x-win": "^1.6.0",
+    "@miniben90/x-win-win32-x64-msvc": "1.6.0",
+    "@miniben90/x-win-darwin-x64": "1.6.0",
+    "@miniben90/x-win-linux-x64-gnu": "1.6.0",
+    "@miniben90/x-win-darwin-arm64": "1.6.0",
+    "@miniben90/x-win-win32-arm64-msvc": "1.6.0",
+    "@miniben90/x-win-win32-ia32-msvc": "1.6.0",
+    "@miniben90/x-win-darwin-universal": "1.6.0"
   }
 }

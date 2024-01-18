@@ -3,8 +3,8 @@
 use crate::types::Config;
 use lazy_static::lazy_static;
 use serde_json::from_str;
-use std::collections::HashMap;
-use tauri::Menu;
+use std::{collections::HashMap, env::current_exe};
+use tauri::{Menu, window};
 mod types;
 use std::{env, fs, path::Path};
 const CONFIG_PATH: &str = "npm/node_modules/record-your-life/dist/record-your-life.json";
@@ -38,6 +38,9 @@ fn get_data(date: &str) -> String {
 }
 
 fn main() {
+    let path = current_exe().unwrap();
+    window::Monitor::
+    println!("exe: {:?}", path);
     let menu = Menu::new();
     tauri::Builder::default()
         .menu(menu)
