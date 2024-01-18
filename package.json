@@ -5,6 +5,7 @@
   "scripts": {
     "test": "vitest",
     "build": "esno scripts/build.ts",
+    "test:log": "esno scripts/log.ts",
     "dev": "esno packages/record-your-life/src/index.ts",
     "dev:web": "pnpm -F web run dev",
     "bench": "vitest bench --run"

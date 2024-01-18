@@ -29,67 +29,73 @@ cli.command('set <storagePath>').action(async (storagePath) => {
 
 cli
   .command('[date]', 'Should like 2024-01-01, or 1 mean yesterday and so on')
+  .option('--file-name', 'Indicate the file')
   .option('--table', 'Table format of usage')
   .option('--bar', 'Bar chat format of usage')
   .option('--board', 'Board chat format of usage')
   .option('--web', 'Start web server')
   .option('--list', 'List of apps')
   .option('--detail', 'Show the unused apps')
-  .action(async (date: string, { table, list, bar, web, board, detail }) => {
-    try {
-      const today = getYMD()
-      if (!date) {
-        date = today
-        console.log(date)
-      } else {
-        const step = -date
-        if (Number.isNaN(step)) {
-          logWarn(
-            `unkown date: "${color.underline(date)}", show tody infomration`,
-          )
+  .action(
+    async (
+      date: string,
+      { table, list, bar, web, board, detail, fileName },
+    ) => {
+      try {
+        const today = getYMD()
+        if (!date) {
           date = today
+          console.log(date)
         } else {
-          date = backDate(today, step)
+          const step = -date
+          if (Number.isNaN(step)) {
+            logWarn(
+              `unkown date: "${color.underline(date)}", show tody infomration`,
+            )
+            date = today
+          } else {
+            date = backDate(today, step)
+          }
         }
-      }
-      const content = await fsp.readFile(
-        path.join(config.storagePath, `${date}.json`),
-        'utf-8',
-      )
-      if (!content) {
-        throw new Error('empty data, please wait 5 min as least')
-      }
-      const records: Record<string, Usage> = JSON.parse(content)
-      const logger = new Logger(records, date)
-      if (table) {
-        logger.table()
-      } else if (list) {
-        logger.list()
-      } else if (bar) {
-        logger.bar()
-      } else if (web) {
-        await startServer(config, records)
-      } else {
-        logger.board()
-      }
-      const unusedApps: string[] = logger.unusedApps
-
-      if (unusedApps.length > 0 && detail) {
-        console.log(
-          '\n' +
-            highlight(unusedApps.length) +
-            color.dim(' unused apps') +
-            color.white('(0ms)  '),
+        const content = await fsp.readFile(
+          fileName ?? path.join(config.storagePath, `${date}.json`),
+          'utf-8',
         )
-        for (const app of unusedApps) {
-          console.log(color.cyan(app))
+        if (!content) {
+          throw new Error('empty data, please wait 5 min as least')
         }
+        const records: Record<string, Usage> = JSON.parse(content)
+        const logger = new Logger(records, date)
+        if (table) {
+          logger.table()
+        } else if (list) {
+          logger.list()
+        } else if (bar) {
+          logger.bar()
+        } else if (web) {
+          await startServer(config, records)
+        } else {
+          logger.board()
+        }
+        const unusedApps: string[] = logger.unusedApps
+
+        if (unusedApps.length > 0 && detail) {
+          console.log(
+            '\n' +
+              highlight(unusedApps.length) +
+              color.dim(' unused apps') +
+              color.white('(0ms)  '),
+          )
+          for (const app of unusedApps) {
+            console.log(color.cyan(app))
+          }
+        }
+        console.log('\n')
+      } catch (error: any) {
+        logError(error.message)
       }
-      console.log('\n')
-    } catch (error: any) {
-      logError(error.message)
-    }
-  })
+    },
+  )
 
 cli.command('watch [timer]', 'init record your life').action(async (timer) => {
   if (timer < 1000) {
