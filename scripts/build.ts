@@ -45,7 +45,7 @@ async function copyBindingNode() {
 
 Promise.all([
   initConfig(),
-  copyBindingNode(),
+  // copyBindingNode(),
   exec('pnpm -F web run build', (err, stdout) => {
     console.log(stdout)
   }),

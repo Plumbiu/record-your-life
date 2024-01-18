@@ -1,6 +1,6 @@
 {
   "name": "record-your-life",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Record your app usage",
   "type": "module",
   "main": "./dist/index.js",
@@ -40,13 +40,6 @@
     "picocolors": "^1.0.0"
   },
   "dependencies": {
-    "@miniben90/x-win": "^1.6.0",
-    "@miniben90/x-win-win32-x64-msvc": "1.6.0",
-    "@miniben90/x-win-darwin-x64": "1.6.0",
-    "@miniben90/x-win-linux-x64-gnu": "1.6.0",
-    "@miniben90/x-win-darwin-arm64": "1.6.0",
-    "@miniben90/x-win-win32-arm64-msvc": "1.6.0",
-    "@miniben90/x-win-win32-ia32-msvc": "1.6.0",
-    "@miniben90/x-win-darwin-universal": "1.6.0"
+    "@miniben90/x-win": "^1.6.0"
   }
 }
