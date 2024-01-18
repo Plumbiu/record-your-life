@@ -135,3 +135,7 @@ export class Logger {
 export function logError(str: string | number) {
   console.log(color.red('Error: ' + str) + '\n')
 }
+
+export function logWarn(str: string | number) {
+  console.log(color.yellow('Warn: ' + str) + '\n')
+}

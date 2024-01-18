@@ -6,9 +6,9 @@ import { cac } from 'cac'
 import { Usage, getYMD } from '@record-your-life/shared'
 import color from 'picocolors'
 import { CONFIG_FILE_PATH, __dirname } from './constant'
-import { Logger, logError } from './logger'
+import { Logger, logError, logWarn } from './logger'
 import { startServer } from './server'
-import { highlight, init, initConfig } from './utils'
+import { backDate, highlight, init, initConfig } from './utils'
 
 const config = initConfig()
 const cli = cac('record-your-life')
@@ -28,7 +28,7 @@ cli.command('set <storagePath>').action(async (storagePath) => {
 })
 
 cli
-  .command('[date]')
+  .command('[date]', 'Should like 2024-01-01, or 1 mean yesterday and so on')
   .option('--table', 'Table format of usage')
   .option('--bar', 'Bar chat format of usage')
   .option('--board', 'Board chat format of usage')
@@ -37,9 +37,20 @@ cli
   .option('--detail', 'Show the unused apps')
   .action(async (date: string, { table, list, bar, web, board, detail }) => {
     try {
+      const today = getYMD()
       if (!date) {
-        date = getYMD()
+        date = today
         console.log(date)
+      } else {
+        const step = -date
+        if (Number.isNaN(step)) {
+          logWarn(
+            `unkown date: "${color.underline(date)}", show tody infomration`,
+          )
+          date = today
+        } else {
+          date = backDate(today, step)
+        }
       }
       const content = await fsp.readFile(
         path.join(config.storagePath, `${date}.json`),
