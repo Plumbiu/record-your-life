@@ -57,7 +57,10 @@ export async function init(timer: number, config: Config) {
   }
   let preApp: WindowInfo | undefined
   watchForegroundWindow(async (curApp) => {
-    if (curApp) {
+    if (
+      curApp &&
+      !curApp.info.path.toLocaleLowerCase().startsWith('c:\\windows')
+    ) {
       const record = records.get(curApp.info.name)
       if (!record) {
         updateRecord(curApp.info.name, true)

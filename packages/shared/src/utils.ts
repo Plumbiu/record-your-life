@@ -52,6 +52,9 @@ export function uniqueDurationByHour(durations: Duration[]) {
   let start = +getHours(durations[0].time)
   let curDur
   const end = +getHours(durations[durations.length - 1].time)
+  if (start === end) {
+    return
+  }
   for (const { duration, time } of durations) {
     if (duration) {
       if (!curDur) {

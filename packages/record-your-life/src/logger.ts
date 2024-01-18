@@ -80,11 +80,10 @@ export class Logger {
       const duration = formatDuration(total)
       if (duration !== '0ms') {
         console.log(
-          ' '.repeat(this.nameMaxLen + 2) +
+          color.cyan(name) +
+            ' '.repeat(this.nameMaxLen - getUtf8Length(name) + 2) +
             '■'.repeat(Math.ceil(total / 300_000)).padEnd(maxLen + 4, ' ') +
-            duration +
-            '\r' +
-            color.cyan(name),
+            duration,
         )
       }
     }
@@ -114,18 +113,20 @@ export class Logger {
     console.log(color.bold(color.green(h)))
     for (const { durations, name } of this.records) {
       const durs = uniqueDurationByHour(durations)
+      if (!durs) {
+        continue
+      }
       if (durs.length > 0) {
-        let str = ' '.repeat(this.nameMaxLen)
+        let str =
+          color.cyan(name) + ' '.repeat(this.nameMaxLen - getUtf8Length(name))
         for (let i = 0; i <= end - start; i++) {
           const dur = formatDuration(durs[i], 1, true)
           if (dur === undefined) {
-            str = ' '.repeat(PEND_LEN) + str
+            str += ' '.repeat(PEND_LEN)
           } else {
             str += dur.padEnd(PEND_LEN, ' ')
           }
         }
-        str += '\r'
-        str += color.cyan(name)
         console.log(str)
       }
     }
