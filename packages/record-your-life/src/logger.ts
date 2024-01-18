@@ -94,8 +94,11 @@ export class Logger {
     let start = Number.POSITIVE_INFINITY
     let end = -1
     for (const record of this.records) {
-      if (start > record.start) {
-        start = record.start
+      const firstStart = record.durations.find(
+        (dur) => dur.duration > 60_000,
+      )?.time
+      if (firstStart && start > firstStart) {
+        start = firstStart
       }
       if (end < record.end) {
         end = record.end
@@ -104,7 +107,7 @@ export class Logger {
     start = Math.ceil(+getHours(start))
     end = Math.ceil(+getHours(end))
     const PEND_LEN = 9
-    let h = 'Time '.padEnd(this.nameMaxLen + 2)
+    let h = 'Time '.padEnd(this.nameMaxLen)
     for (let i = start; i <= end; i++) {
       h += (i + ':00').padEnd(PEND_LEN)
     }
@@ -112,7 +115,7 @@ export class Logger {
     for (const { durations, name } of this.records) {
       const durs = uniqueDurationByHour(durations)
       if (durs.length > 0) {
-        let str = ' '.repeat(this.nameMaxLen) + '  '
+        let str = ' '.repeat(this.nameMaxLen)
         for (let i = 0; i <= end - start; i++) {
           const dur = formatDuration(durs[i], 1)
           if (dur === undefined) {

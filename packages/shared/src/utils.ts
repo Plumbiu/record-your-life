@@ -13,7 +13,7 @@ export function toFixed(n: number, fixed = 2) {
   return n.toFixed(fixed)
 }
 export function formatDuration(time: number | undefined, fixed = 2) {
-  if (time === undefined || time === 0) {
+  if (time === undefined || time === 0 || time < 60_000) {
     return
   }
   let r: string = time + 'ms'
