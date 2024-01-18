@@ -1,6 +1,6 @@
 {
   "name": "record-your-life",
-  "version": "0.3.3",
+  "version": "0.3.5",
   "description": "Record your app usage",
   "type": "module",
   "main": "./dist/index.js",
