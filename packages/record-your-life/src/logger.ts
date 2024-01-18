@@ -117,7 +117,7 @@ export class Logger {
       if (durs.length > 0) {
         let str = ' '.repeat(this.nameMaxLen)
         for (let i = 0; i <= end - start; i++) {
-          const dur = formatDuration(durs[i], 1)
+          const dur = formatDuration(durs[i], 1, true)
           if (dur === undefined) {
             str = ' '.repeat(PEND_LEN) + str
           } else {
