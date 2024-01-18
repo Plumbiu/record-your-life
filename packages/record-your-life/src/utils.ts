@@ -8,9 +8,15 @@ import { __dirname, CONFIG_FILE_PATH } from './constant'
 
 const records: Map<string, Usage> = new Map()
 
-export function initConfig() {
-  const config = JSON.parse(readFileSync(CONFIG_FILE_PATH, 'utf-8'))
-  return config as Config
+export function initConfig(): Config {
+  try {
+    const config = JSON.parse(readFileSync(CONFIG_FILE_PATH, 'utf-8'))
+    return config
+  } catch (error) {
+    return {
+      storagePath: './',
+    }
+  }
 }
 
 function updateRecord(name: string | undefined, onlyInit = false) {
