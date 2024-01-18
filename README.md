@@ -1,6 +1,6 @@
 # record-your-life
 
-> 记录你的 windows/linux/macos 应用使用时间
+> 记录你的应用使用时间, 支持 windows、Linux、MacOS
 
 # 安装
 
