@@ -3,10 +3,10 @@ import DataIcon from '@/components/icons/Data.vue'
 import TableIcon from '@/components/icons/Table.vue'
 import SettingIcon from '@/components/icons/Setting.vue'
 import SponsorIcon from '@/components/icons/Sponsor.vue'
-import { useRoute } from 'vue-router'
+// import { useRoute } from 'vue-router'
 
-const route = useRoute()
-const query = route.query.type
+// const route = useRoute()
+// const query = route.query.type
 </script>
 
 <template>
