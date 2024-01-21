@@ -33,7 +33,7 @@ onMounted(() => {
   if (elm) {
     Chart.defaults.backgroundColor = '#333'
     const color = randomColor()
-    new Chart(elm, {
+    new Chart(elm as any, {
       type: 'line',
       options: {
         scales: {
