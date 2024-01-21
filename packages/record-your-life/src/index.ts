@@ -33,14 +33,10 @@ cli
   .option('--table', 'Table format of usage')
   .option('--bar', 'Bar chat format of usage')
   .option('--board', 'Board chat format of usage')
-  .option('--web', 'Start web server')
   .option('--list', 'List of apps')
   .option('--detail', 'Show the unused apps')
   .action(
-    async (
-      date: string,
-      { table, list, bar, web, board, detail, fileName },
-    ) => {
+    async (date: string, { table, list, bar, board, detail, fileName }) => {
       try {
         const today = getYMD()
         if (!date) {
@@ -72,8 +68,6 @@ cli
           logger.list()
         } else if (bar) {
           logger.bar()
-        } else if (web) {
-          await startServer(config, records)
         } else {
           logger.board()
         }
@@ -96,6 +90,10 @@ cli
       }
     },
   )
+
+cli.command('web', 'Start web server').action(async () => {
+  await startServer(config)
+})
 
 cli.command('watch [timer]', 'init record your life').action(async (timer) => {
   if (timer < 1000) {

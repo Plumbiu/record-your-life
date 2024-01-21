@@ -9,8 +9,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@visactor/vchart": "^1.8.6",
-    "vue": "^3.3.11"
+    "@visactor/vchart": "^1.8.8",
+    "@visactor/vchart-theme": "^1.8.8",
+    "axios": "^1.6.5",
+    "chart.js": "^4.4.1",
+    "naive-ui": "^2.37.3",
+    "pinia": "^2.1.7",
+    "vue": "^3.3.11",
+    "vue-router": "^4.2.5"
   },
   "devDependencies": {
     "@record-your-life/shared": "workspace:^",

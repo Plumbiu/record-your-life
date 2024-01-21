@@ -1,23 +1,54 @@
 import fsp from 'node:fs/promises'
-import { createServer } from 'node:http'
 import path from 'node:path'
-import { Config, Usage } from '@record-your-life/shared'
+import { App, Config } from '@record-your-life/shared'
 import color from 'picocolors'
+import Fastify from 'fastify'
+import cors from '@fastify/cors'
 import { __dirname } from './constant'
 
-export async function startServer(
-  config: Config,
-  records: Record<string, Usage>,
-) {
+const fastify = Fastify()
+fastify.register(cors, {
+  origin: '*',
+})
+
+const DATE_JSON_REGX = /\d{4}-\d{2}-\d{2}.json/
+
+export async function startServer(config: Config) {
+  const { storagePath } = config
+  let dates: string[] | undefined
   const html = await fsp.readFile(path.join(__dirname, '../dist', 'index.html'))
-  const server = createServer((req, res) => {
-    if (req.url === '/') {
-      res.end(html)
-    } else if (req.url === '/api/data') {
-      res.end(JSON.stringify(records))
-    }
+  fastify.get('/', (req, res) => {
+    res.send(html)
   })
-  server.listen(3033, () => {
+
+  fastify.get('/api/date', async (req, res) => {
+    dates = (await fsp.readdir(storagePath)).filter((item) =>
+      DATE_JSON_REGX.test(item),
+    )
+    res.send(dates)
+  })
+
+  fastify.get<{
+    Querystring: {
+      name: string
+    }
+  }>('/api/date/:date', async (req, res) => {
+    const { date } = req.params as any
+    const content = await fsp.readFile(path.join(storagePath, date + '.json'))
+    res.send(content)
+  })
+
+  fastify.get('/api/app/:date', async (req, res) => {
+    const { date } = req.params as any
+    const content = await fsp.readFile(
+      path.join(storagePath, date + '.json'),
+      'utf-8',
+    )
+    const result: App = JSON.parse(content)
+    res.send(Object.keys(result))
+  })
+
+  fastify.listen({ port: 3033 }, () => {
     console.log('server is running at ' + color.cyan('http://localhost:3033'))
   })
 }

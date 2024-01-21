@@ -1,24 +1,46 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
+import { darkTheme, NConfigProvider, NGlobalStyle } from 'naive-ui'
+import Sider from '@/components/Sider/index.vue'
+import Header from '@/components/Header/index.vue'
+import { onMounted, ref } from 'vue'
+import { useDates } from './store'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
+const state = useDates()
+const initializing = ref(false)
+onMounted(async () => {
+  try {
+    await state.initDates()
+  } finally {
+    initializing.value = true
+  }
+})
 </script>
 
 <template>
-  <Suspense>
-    <HelloWorld msg="Vite + Vue" />
-  </Suspense>
+  <NConfigProvider :theme="darkTheme">
+    <Suspense>
+      <div class="container" v-if="initializing">
+        <Sider />
+        <div class="main">
+          <Header />
+          <div class="view">
+            <RouterView :key="route.fullPath" />
+          </div>
+        </div>
+      </div>
+    </Suspense>
+    <NGlobalStyle />
+  </NConfigProvider>
 </template>
 
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+.main {
+  margin-left: 60px;
+  flex: 1;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+.view {
+  margin-top: 24px;
 }
 </style>

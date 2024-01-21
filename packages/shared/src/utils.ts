@@ -47,8 +47,14 @@ export function getHours(time: number) {
   return pad(d.getHours())
 }
 
+export interface HourDuration {
+  time: number
+  duration: number
+  formatTime: string
+}
+
 export function uniqueDurationByHour(durations: Duration[]) {
-  const tmp: Record<string, number> = {}
+  const tmp: Record<string, HourDuration> = {}
   let start = +getHours(durations[0].time)
   let curDur
   const end = +getHours(durations[durations.length - 1].time)
@@ -57,22 +63,22 @@ export function uniqueDurationByHour(durations: Duration[]) {
   }
   for (const { duration, time } of durations) {
     if (duration) {
+      const value = { time, duration, formatTime: getHours(time) }
       if (!curDur) {
-        curDur = duration
+        curDur = value
       }
       const fmtTime = getHours(time)
-      tmp[fmtTime] = duration
+      tmp[fmtTime] = value
     }
   }
   for (let i = start; i <= end; i++) {
     const key = pad(i)
     if (!tmp[key]) {
       if (curDur) {
-        tmp[key] = curDur
+        tmp[key] = { ...curDur, formatTime: key }
       }
     }
     curDur = tmp[key]
   }
-
-  return Object.values(tmp).sort((a, b) => a - b)
+  return Object.values(tmp).sort((a, b) => a.duration - b.duration)
 }

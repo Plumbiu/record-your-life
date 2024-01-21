@@ -67,9 +67,9 @@ export async function init(timer: number, config: Config) {
       } else {
         record.end = Date.now()
       }
+      updateRecord(preApp?.info.name)
+      preApp = curApp
     }
-    updateRecord(preApp?.info.name)
-    preApp = curApp
   })
   setInterval(async () => {
     await fsp.writeFile(todayFile, JSON.stringify(Object.fromEntries(records)))
@@ -93,12 +93,12 @@ async function sleep() {
 }
 
 export async function watchForegroundWindow(cb: (info: WindowInfo) => void) {
-  let oldpath = activeWindow()
+  let oldInfo = activeWindow()
   while (true) {
-    const newPath = activeWindow()
-    if (newPath && newPath.info.path !== oldpath.info.path) {
-      cb(newPath)
-      oldpath = newPath
+    const newInfo = activeWindow()
+    if (newInfo && newInfo.info.path !== oldInfo.info.path) {
+      cb(newInfo)
+      oldInfo = newInfo
     }
     await sleep()
   }

@@ -1,4 +1,7 @@
 body {
   margin: 0;
-  overflow: hidden;
+  min-width: 1200px;
+  width: 100%;
+  height: 100vh;
+  background-color: #181818!important;
 }

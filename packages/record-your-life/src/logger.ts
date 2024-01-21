@@ -120,7 +120,7 @@ export class Logger {
         let str =
           color.cyan(name) + ' '.repeat(this.nameMaxLen - getUtf8Length(name))
         for (let i = 0; i <= end - start; i++) {
-          const dur = formatDuration(durs[i], 1, true)
+          const dur = formatDuration(durs[i]?.duration, 1, true)
           if (dur === undefined) {
             str += ' '.repeat(PEND_LEN)
           } else {
