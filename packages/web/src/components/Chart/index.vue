@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Chart from '@/plugins/chart'
 import {
   HourDuration,
   Duration,
@@ -6,13 +7,14 @@ import {
   uniqueDurationByHour,
 } from '@record-your-life/shared'
 import { onMounted, ref } from 'vue'
-import Chart from 'chart.js/auto'
 
 const props = defineProps<{
   name: string
   total: string | undefined
   data: Duration[]
 }>()
+
+console.log({ data: props.data })
 
 let data: HourDuration[] = []
 const isEmpty = ref(false)
@@ -38,11 +40,7 @@ onMounted(() => {
       options: {
         plugins: {
           legend: {
-            title: {
-              display: true,
-              text: props.total,
-              color: 'cyan',
-            },
+            labels: {},
           },
         },
       },

@@ -5,13 +5,17 @@ import axios from '@/plugins/axios'
 export async function getAppByDate(
   date: string = getYMD(),
 ): Promise<UsageArr[] | undefined> {
-  const usage = await axios.get<any, AxiosResponse<UsageMap>>(`/date/${date}`)
-  return Object.entries(usage?.data ?? {})
-    .map(([name, value]) => ({
-      name,
-      ...value,
-    }))
-    .sort((a, b) => b.total - a.total)
+  try {
+    const usage = await axios.get<any, AxiosResponse<UsageMap>>(`/date/${date}`)
+    return Object.entries(usage?.data ?? {})
+      .map(([name, value]) => ({
+        name,
+        ...value,
+      }))
+      .sort((a, b) => b.total - a.total)
+  } catch (err) {
+    return
+  }
 }
 
 export async function getDates() {

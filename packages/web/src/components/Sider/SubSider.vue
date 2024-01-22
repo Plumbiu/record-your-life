@@ -1,78 +1,104 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { NSelect, NIcon } from 'naive-ui'
-import { useAppStore, useDateStore } from '@/store'
 import { formatHour } from '@record-your-life/shared'
+import { useAppStore, useDateStore } from '@/store'
 import RateUpIcon from '@/components/icons/RateUp.vue'
 import RateDownIcon from '@/components/icons/RateDown.vue'
 import AppItem from './AppItem.vue'
 import Panel from './Panel.vue'
 import { useRouter } from 'vue-router'
 
+enum AppOpt {
+  ASC = -1,
+  DESC = +1,
+}
+const router = useRouter()
 const appStore = useAppStore()
+const timeRate = appStore.timeRate
+const numRate = appStore.numRate
 const dateStore = useDateStore()
 await dateStore.initDate()
-
-const router = useRouter()
 const dates = dateStore.dates
-const selectedValue = ref<string>(
+const selectedDate = ref<string>(
   localStorage.getItem('date') ?? dates[dates.length - 1],
 )
-const options = dates.map((item) => ({
+const selectedOrder = ref<AppOpt>(AppOpt.ASC)
+
+const dateOptions = dates.map((item) => ({
   label: item,
   value: item,
 }))
 
+const orderOptions = [
+  {
+    label: 'Asc',
+    value: AppOpt.DESC,
+  },
+  {
+    label: 'Desc',
+    value: AppOpt.ASC,
+  },
+]
+
 watch(
-  selectedValue,
-  (date) => {
+  selectedDate,
+  async (date) => {
     localStorage.setItem('date', date)
-    router.push({
-      name: 'chart',
-      query: {
-        date,
-      },
-    })
+    await appStore.initApp(date as string)
+    const fisrtAppName = appStore.usage?.[0].name
+    if (fisrtAppName) {
+      await router.push({
+        name: 'chart',
+        query: {
+          app: fisrtAppName,
+        },
+      })
+    }
   },
   { immediate: true },
 )
+
+watch(selectedOrder, (order) => {
+  appStore.usage = appStore.usage.sort((a, b) => order * (a.total - b.total))
+})
 </script>
 
 <template>
   <div class="sub_sider f-c">
     <Panel
       tl="Total usage time"
-      :bl="`${formatHour(appStore.total)} h`"
-      :br="`${appStore.timeRate} h`"
+      :bl="`${formatHour(appStore.total)}h`"
+      :br="`${+appStore.timeRate < 0 ? '' : '+'}${appStore.timeRate}h`"
     >
       <template #tr>
         <NSelect
           style="width: 130px"
-          v-model:value="selectedValue"
-          :options="options"
+          v-model:value="selectedDate"
+          :options="dateOptions"
         />
       </template>
       <template #br>
-        <NIcon size="large" :color="+appStore.timeRate < 0 ? 'red' : 'green'">
-          <component :is="+appStore.timeRate < 0 ? RateDownIcon : RateUpIcon" />
+        <NIcon size="large" :color="+timeRate < 0 ? 'red' : 'green'">
+          <component :is="+timeRate < 0 ? RateDownIcon : RateUpIcon" />
         </NIcon>
       </template>
     </Panel>
     <Panel
       tl="App usage"
       :bl="Object.keys(appStore.usage).length"
-      :br="appStore.numRate"
+      :br="`${+appStore.timeRate < 0 ? '' : '+'}${numRate}`"
     >
       <template #tr>
         <NSelect
           style="width: 130px"
-          v-model:value="selectedValue"
-          :options="options"
+          v-model:value="selectedOrder"
+          :options="orderOptions"
         />
       </template>
       <template #br>
-        <NIcon size="large" :color="+appStore.numRate < 0 ? 'red' : 'green'">
-          <component :is="+appStore.numRate < 0 ? RateDownIcon : RateUpIcon" />
+        <NIcon size="large" :color="+numRate < 0 ? 'red' : 'green'">
+          <component :is="+numRate < 0 ? RateDownIcon : RateUpIcon" />
         </NIcon>
       </template>
     </Panel>

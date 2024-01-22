@@ -11,10 +11,12 @@ import { getAppByDate, getDates } from '@/api'
 
 export const useDateStore = defineStore('dates', () => {
   const dates = ref<string[]>([])
+  const selectedDate = ref<string>(getYMD())
+
   async function initDate() {
     dates.value = await getDates()
   }
-  return { dates, initDate }
+  return { dates, initDate, selectedDate }
 })
 
 export const useAppStore = defineStore('app', () => {
@@ -31,7 +33,7 @@ export const useAppStore = defineStore('app', () => {
   })
 
   const timeRate = computed(() => {
-    return formatHour(total.value - prevTotal.value ?? 0, 1)
+    return formatHour(total.value - (prevTotal.value ?? 0), 1)
   })
 
   const numRate = computed(() => {
@@ -56,5 +58,12 @@ export const useAppStore = defineStore('app', () => {
     timeRate,
     numRate,
     date: route.query.date,
+  }
+})
+
+export const useModeStore = defineStore('mode', () => {
+  const mode = ref<'App' | 'Summary'>('Summary')
+  return {
+    mode,
   }
 })

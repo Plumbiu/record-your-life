@@ -1,21 +1,10 @@
 <script setup lang="ts">
-import { watch } from 'vue'
 import { darkTheme, NConfigProvider, NGlobalStyle } from 'naive-ui'
 import Sider from '@/components/Sider/index.vue'
 import Header from '@/components/Header/index.vue'
 import { useRoute } from 'vue-router'
-import { useAppStore } from './store'
 
 const route = useRoute()
-const appStore = useAppStore()
-
-watch(
-  route,
-  () => {
-    appStore.initApp(route.query.date as string)
-  },
-  { immediate: true },
-)
 </script>
 
 <template>

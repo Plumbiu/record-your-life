@@ -1,6 +1,6 @@
 import fsp from 'node:fs/promises'
 import path from 'node:path'
-import { App, Config } from '@record-your-life/shared'
+import { Config, UsageMap } from '@record-your-life/shared'
 import color from 'picocolors'
 import Fastify from 'fastify'
 import cors from '@fastify/cors'
@@ -44,8 +44,14 @@ export async function startServer(config: Config) {
       path.join(storagePath, date + '.json'),
       'utf-8',
     )
-    const result: App = JSON.parse(content)
-    res.send(Object.keys(result))
+    const result: UsageMap = JSON.parse(content)
+    const obj: string[] = []
+    for (const [key, { total }] of Object.entries(result)) {
+      if (total) {
+        obj.push(key)
+      }
+    }
+    res.send(obj)
   })
 
   fastify.listen({ port: 3033 }, () => {

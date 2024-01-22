@@ -12,7 +12,6 @@ const { app, isActive, total } = defineProps<{
       name: 'chart',
       path: '/chart',
       query: {
-        ...$route.query,
         app,
       },
     }"

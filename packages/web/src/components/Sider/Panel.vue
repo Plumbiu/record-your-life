@@ -17,7 +17,7 @@ const { tl, bl, br } = defineProps<{
         <h2>{{ bl }}</h2>
       </div>
       <div class="f-c" style="width: 130px">
-        <span class="fade">{{ br }}</span>
+        <span class="fade">{{ br }} YTD</span>
         <slot name="br" />
       </div>
     </div>
