@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "@tauri-apps/api": "^1.5.3",
-    "ant-design-vue": "^4.1.0",
-    "vue": "^3.4.8"
+    "ant-design-vue": "^4.1.1",
+    "vue": "^3.4.15"
   },
   "devDependencies": {
     "@ant-design/icons-vue": "^7.0.1",
@@ -19,7 +19,7 @@
     "@tauri-apps/cli": "^1.5.9",
     "@vitejs/plugin-vue": "^5.0.3",
     "typescript": "^5.3.3",
-    "vite": "^5.0.11",
+    "vite": "^5.0.12",
     "vue-tsc": "^1.8.27"
   }
 }
