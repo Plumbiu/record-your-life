@@ -11,8 +11,8 @@ const appStore = useAppStore()
 
 watch(
   route,
-  async () => {
-    await appStore.initApp(route.query.date as string)
+  () => {
+    appStore.initApp(route.query.date as string)
   },
   { immediate: true },
 )

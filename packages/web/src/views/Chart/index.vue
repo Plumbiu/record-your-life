@@ -19,7 +19,8 @@ const usage = appStore.getCurrentApp()
 
 <style scoped>
 .chart_wrapper {
-  width: 80%;
+  margin: 0 auto;
+  width: 75%;
   box-sizing: border-box;
   border-radius: 4px;
   justify-content: center;

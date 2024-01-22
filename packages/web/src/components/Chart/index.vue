@@ -7,7 +7,6 @@ import {
 } from '@record-your-life/shared'
 import { onMounted, ref } from 'vue'
 import Chart from 'chart.js/auto'
-import { randomColor } from '@/utils'
 
 const props = defineProps<{
   name: string
@@ -32,15 +31,11 @@ onMounted(() => {
   const elm = document.getElementById(props.name)
   if (elm) {
     Chart.defaults.backgroundColor = '#333'
-    const color = randomColor()
+    Chart.defaults.font.size = 18
+    const color = '#68CDDB'
     new Chart(elm as any, {
       type: 'line',
       options: {
-        scales: {
-          y: {
-            stacked: true,
-          },
-        },
         plugins: {
           legend: {
             title: {
@@ -59,6 +54,7 @@ onMounted(() => {
             label: props.name,
             data: data.map((row) => row.duration / 1000 / 60),
             fill: true,
+            backgroundColor: 'rgba(68, 205, 219, 0.2)',
             borderWidth: 3,
             tension: 0.4,
           },

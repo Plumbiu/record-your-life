@@ -58,7 +58,7 @@ record-your-life 2024-01-08 --board
 ## 网页
 
 ```bash
-record-your-life 2024-01-08 --web
+record-your-life web
 ```
 
 ## --detail
@@ -97,3 +97,8 @@ Options:
   --detail    Show the unused apps
   -h, --help  Display this message
 ```
+
+# TODO
+
+- [] 支持年度总结等
+- [] 优化网页结构

@@ -12,7 +12,6 @@ import { getAppByDate, getDates } from '@/api'
 
 export const useDateStore = defineStore('dates', () => {
   const dates = ref<string[]>([])
-
   async function initDate() {
     dates.value = await getDates()
   }
@@ -42,8 +41,12 @@ export const useAppStore = defineStore('app', () => {
     )
   })
 
-  const rate = computed(() => {
+  const timeRate = computed(() => {
     return formatHour(total.value - prevTotal.value ?? 0, 1)
+  })
+
+  const numRate = computed(() => {
+    return Object.keys(usage).length - Object.keys(prevUsage).length
   })
 
   function getCurrentApp() {
@@ -75,7 +78,9 @@ export const useAppStore = defineStore('app', () => {
     getCurrentApp,
     startAndEnd,
     prevTotal,
-    rate,
+    timeRate,
+    numRate,
     firstApp,
+    date: route.query.date,
   }
 })
