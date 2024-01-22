@@ -46,6 +46,7 @@ onMounted(() => {
             title: {
               display: true,
               text: props.total,
+              color: 'cyan',
             },
           },
         },
@@ -76,9 +77,8 @@ onMounted(() => {
 
 <style scoped>
 .chart {
-  width: 420px;
-  margin: 6px;
-  background-color: #111;
+  height: max-content;
+  margin: 8px;
   border-radius: 4px;
   padding: 12px;
 }

@@ -1,27 +1,27 @@
 <script setup lang="ts">
+import { watch } from 'vue'
 import { darkTheme, NConfigProvider, NGlobalStyle } from 'naive-ui'
 import Sider from '@/components/Sider/index.vue'
 import Header from '@/components/Header/index.vue'
-import { onMounted, ref } from 'vue'
-import { useDates } from './store'
 import { useRoute } from 'vue-router'
+import { useAppStore } from './store'
 
 const route = useRoute()
-const state = useDates()
-const initializing = ref(false)
-onMounted(async () => {
-  try {
-    await state.initDates()
-  } finally {
-    initializing.value = true
-  }
-})
+const appStore = useAppStore()
+
+watch(
+  route,
+  async () => {
+    await appStore.initApp(route.query.date as string)
+  },
+  { immediate: true },
+)
 </script>
 
 <template>
   <NConfigProvider :theme="darkTheme">
     <Suspense>
-      <div class="container" v-if="initializing">
+      <div class="container">
         <Sider />
         <div class="main">
           <Header />
@@ -37,10 +37,11 @@ onMounted(async () => {
 
 <style scoped>
 .main {
-  margin-left: 60px;
+  margin-left: 420px;
   flex: 1;
 }
 .view {
+  margin: 0 auto;
   margin-top: 24px;
 }
 </style>

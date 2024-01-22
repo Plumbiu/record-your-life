@@ -3,12 +3,12 @@ import fsp from 'node:fs/promises'
 import { exec } from 'node:child_process'
 import { existsSync } from 'node:fs'
 import { cac } from 'cac'
-import { Usage, getYMD } from '@record-your-life/shared'
+import { Usage, backDate, getYMD } from '@record-your-life/shared'
 import color from 'picocolors'
 import { CONFIG_FILE_PATH, __dirname } from './constant'
 import { Logger, logError, logWarn } from './logger'
 import { startServer } from './server'
-import { backDate, highlight, init, initConfig } from './utils'
+import { highlight, init, initConfig } from './utils'
 
 const config = initConfig()
 const cli = cac('record-your-life')

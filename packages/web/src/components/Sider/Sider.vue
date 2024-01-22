@@ -3,10 +3,7 @@ import DataIcon from '@/components/icons/Data.vue'
 import TableIcon from '@/components/icons/Table.vue'
 import SettingIcon from '@/components/icons/Setting.vue'
 import SponsorIcon from '@/components/icons/Sponsor.vue'
-// import { useRoute } from 'vue-router'
-
-// const route = useRoute()
-// const query = route.query.type
+import SubSider from './SubSider.vue'
 </script>
 
 <template>
@@ -14,9 +11,11 @@ import SponsorIcon from '@/components/icons/Sponsor.vue'
     <div class="sider_item">
       <div class="side_item__active">
         <DataIcon />
+        <div>Chart</div>
       </div>
       <div>
         <TableIcon />
+        <div>Table</div>
       </div>
     </div>
     <div class="sider_item">
@@ -28,6 +27,7 @@ import SponsorIcon from '@/components/icons/Sponsor.vue'
       </div>
     </div>
   </div>
+  <SubSider />
 </template>
 
 <style scoped>
@@ -37,21 +37,21 @@ import SponsorIcon from '@/components/icons/Sponsor.vue'
   top: 0;
   bottom: 0;
   box-sizing: border-box;
-  height: 100vh;
   display: flex;
-  border-right: 1px solid #333;
+  border-right: 1px solid #282828;
   flex-direction: column;
   justify-content: space-between;
-  width: 60px;
-  background-color: #222;
+  width: 80px;
+  background-color: #181818;
   text-align: center;
 }
 .sider_item > div {
   cursor: pointer;
+  text-align: center;
   transition: background-color 125ms;
   border-radius: 4px;
-  padding: 10px 0;
-  width: 60px;
+  padding: 12px 0;
+  width: 80px;
 }
 
 .sider_item > div:hover {

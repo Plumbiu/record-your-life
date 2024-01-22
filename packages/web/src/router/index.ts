@@ -8,7 +8,7 @@ const routes: RouteRecordRaw[] = [
   {
     name: 'chart',
     path: '/chart',
-    component: () => import('@/views/Chart.vue'),
+    component: () => import('@/views/Chart/index.vue'),
   },
   {
     name: 'table',

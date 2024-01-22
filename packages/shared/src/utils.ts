@@ -34,6 +34,10 @@ export function formatDuration(
   return r
 }
 
+export function formatHour(total: number, fixed = 2) {
+  return (total / 1000 / 60 / 60).toFixed(fixed)
+}
+
 export function formatTime(time: number) {
   const d = new Date(time)
 
@@ -81,4 +85,36 @@ export function uniqueDurationByHour(durations: Duration[]) {
     curDur = tmp[key]
   }
   return Object.values(tmp).sort((a, b) => a.duration - b.duration)
+}
+
+export function backDate(date: string, step: number) {
+  if (step >= 0) {
+    return date
+  }
+  const nums = date.split('-').map((item) => Number(item))
+  const stepDay = nums[2] + step
+  if (stepDay > 0) {
+    nums[2] = stepDay
+  } else {
+    const month = nums[1] - 1
+    if (month > 0) {
+      const daysNum = monthDayNum(+nums[0])
+      nums[1] = month
+      nums[2] = daysNum[month - 1]
+    } else {
+      nums[0] = nums[0] - 1
+      nums[1] = 12
+      nums[2] = 31
+    }
+  }
+
+  return `${nums[0]}-${pad(nums[1])}-${pad(nums[2])}`
+}
+
+export function monthDayNum(year: number) {
+  const normal = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+  if (year % 4 === 0) {
+    normal[1]++
+  }
+  return normal
 }

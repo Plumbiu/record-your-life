@@ -3,7 +3,7 @@ import fsp from 'node:fs/promises'
 import fs, { readFileSync } from 'node:fs'
 import { WindowInfo, activeWindow } from '@miniben90/x-win'
 import color from 'picocolors'
-import { Config, Usage, getYMD, pad } from '@record-your-life/shared'
+import { Config, Usage, getYMD } from '@record-your-life/shared'
 import { __dirname, CONFIG_FILE_PATH } from './constant'
 
 const records: Map<string, Usage> = new Map()
@@ -102,36 +102,4 @@ export async function watchForegroundWindow(cb: (info: WindowInfo) => void) {
     }
     await sleep()
   }
-}
-
-export function backDate(date: string, step: number) {
-  if (step >= 0) {
-    return date
-  }
-  const nums = date.split('-').map((item) => Number(item))
-  const stepDay = nums[2] + step
-  if (stepDay > 0) {
-    nums[2] = stepDay
-  } else {
-    const month = nums[1] - 1
-    if (month > 0) {
-      const daysNum = monthDayNum(+nums[0])
-      nums[1] = month
-      nums[2] = daysNum[month - 1]
-    } else {
-      nums[0] = nums[0] - 1
-      nums[1] = 12
-      nums[2] = 31
-    }
-  }
-
-  return `${nums[0]}-${pad(nums[1])}-${pad(nums[2])}`
-}
-
-export function monthDayNum(year: number) {
-  const normal = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-  if (year % 4 === 0) {
-    normal[1]++
-  }
-  return normal
 }

@@ -5,6 +5,12 @@ export interface Usage {
   durations: Duration[]
 }
 
+export type UsageMap = Record<string, Usage>
+
+export interface UsageArr extends Usage {
+  name: string
+}
+
 export interface Duration {
   time: number
   duration: number
