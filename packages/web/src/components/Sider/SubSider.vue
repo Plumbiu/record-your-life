@@ -31,7 +31,6 @@ watch(
       name: 'chart',
       query: {
         date,
-        app: appStore.firstApp,
       },
     })
   },
@@ -77,11 +76,11 @@ watch(
         </NIcon>
       </template>
     </Panel>
-    <div class="app" v-for="(value, key) in appStore.usage" :key="key">
+    <div class="app" v-for="item in appStore.usage" :key="item.name">
       <AppItem
-        :app="key"
-        :is-active="$route.query.app === key"
-        :total="formatHour(value.total)"
+        :app="item.name"
+        :is-active="$route.query.app === item.name"
+        :total="formatHour(item.total)"
       />
     </div>
   </div>

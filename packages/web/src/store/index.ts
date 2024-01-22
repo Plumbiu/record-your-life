@@ -1,9 +1,8 @@
 import { defineStore } from 'pinia'
 import {
-  UsageMap,
+  UsageArr,
   backDate,
   formatHour,
-  formatTime,
   getYMD,
 } from '@record-your-life/shared'
 import { computed, ref } from 'vue'
@@ -19,26 +18,16 @@ export const useDateStore = defineStore('dates', () => {
 })
 
 export const useAppStore = defineStore('app', () => {
-  const usage = ref<UsageMap>({})
-  const prevUsage = ref<UsageMap>({})
+  const usage = ref<UsageArr[]>([])
+  const prevUsage = ref<UsageArr[]>([])
   const route = useRoute()
 
-  const firstApp = computed(() => {
-    return Object.keys(usage.value)[0]
-  })
-
   const prevTotal = computed(() => {
-    return Object.values(prevUsage.value).reduce(
-      (prev, curr) => prev + curr.total,
-      0,
-    )
+    return prevUsage.value.reduce((prev, curr) => prev + curr.total, 0)
   })
 
   const total = computed(() => {
-    return Object.values(usage.value).reduce(
-      (prev, curr) => prev + curr.total,
-      0,
-    )
+    return usage.value.reduce((prev, curr) => prev + curr.total, 0)
   })
 
   const timeRate = computed(() => {
@@ -46,41 +35,26 @@ export const useAppStore = defineStore('app', () => {
   })
 
   const numRate = computed(() => {
-    return Object.keys(usage).length - Object.keys(prevUsage).length
+    return usage.value.length - prevUsage.value.length
   })
 
   function getCurrentApp() {
-    return usage.value?.[route.query.app as string] ?? undefined
+    return usage.value.find((item) => item.name === route.query.app)
   }
-
-  const startAndEnd = computed<[string, string]>(() => {
-    let start = Number.POSITIVE_INFINITY
-    let end = -1
-    for (const item of Object.values(usage.value)) {
-      if (start > item.start) {
-        start = item.start
-      }
-      if (end < item.end) {
-        end = item.end
-      }
-    }
-    return [formatTime(start).split(' ')[1], formatTime(end).split(' ')[1]]
-  })
 
   async function initApp(date: string = getYMD()) {
-    usage.value = (await getAppByDate(date)) ?? {}
-    prevUsage.value = (await getAppByDate(backDate(date, -1))) ?? {}
+    usage.value = (await getAppByDate(date)) ?? []
+    prevUsage.value = (await getAppByDate(backDate(date, -1))) ?? []
   }
+
   return {
     usage,
     total,
     initApp,
     getCurrentApp,
-    startAndEnd,
     prevTotal,
     timeRate,
     numRate,
-    firstApp,
     date: route.query.date,
   }
 })
