@@ -1,32 +1,36 @@
 <script setup lang="ts">
-import AppTable from './components/AppTable.vue'
-import { ConfigProvider, theme } from 'ant-design-vue'
-import Header from './components/Header.vue'
-import Sider from './components/Sider.vue'
+import { darkTheme, NConfigProvider, NGlobalStyle } from 'naive-ui'
+import Sider from '@/components/Sider/index.vue'
+import Header from '@/components/Header/index.vue'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
 </script>
 
 <template>
-  <ConfigProvider
-    :theme="{
-      algorithm: theme.darkAlgorithm,
-    }"
-  >
+  <NConfigProvider :theme="darkTheme">
     <Suspense>
       <div class="container">
-        <Header />
+        <Sider />
         <div class="main">
-          <Sider />
-          <AppTable />
+          <Header />
+          <div class="view">
+            <RouterView :key="route.fullPath" />
+          </div>
         </div>
       </div>
     </Suspense>
-  </ConfigProvider>
+    <NGlobalStyle />
+  </NConfigProvider>
 </template>
 
 <style scoped>
 .main {
-  display: flex;
-  justify-content: space-between;
-  height: calc(100vh - 50px);
+  margin-left: 420px;
+  flex: 1;
+}
+.view {
+  margin: 0 auto;
+  margin-top: 24px;
 }
 </style>
