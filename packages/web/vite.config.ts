@@ -1,14 +1,20 @@
 /* eslint-disable @stylistic/max-len */
 import path from 'node:path'
+import { compression } from 'vite-plugin-compression2'
 import { defineConfig } from 'vite'
-import { viteSingleFile } from 'vite-plugin-singlefile'
 import vue from '@vitejs/plugin-vue'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue(), viteSingleFile()],
+  plugins: [
+    vue(),
+    compression({
+      deleteOriginalAssets: true,
+    }),
+  ],
   build: {
-    outDir: '../record-your-life/dist',
+    minify: 'terser',
+    outDir: '../record-your-life/dist/web',
     copyPublicDir: false,
   },
   resolve: {

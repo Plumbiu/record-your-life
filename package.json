@@ -8,7 +8,7 @@
     "test:log": "esno scripts/log.ts",
     "dev": "npm-run-all --parallel dev:*",
     "dev:web": "pnpm -F web run dev",
-    "dev:cli-web": "esno packages/record-your-life/src/index.ts web",
+    "dev:cli-web": "esno watch packages/record-your-life/src/index.ts web",
     "bench": "vitest bench --run"
   },
   "author": "Plumbiu",

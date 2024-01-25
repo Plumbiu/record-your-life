@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Chart from '@/plugins/chart'
+import { randomColor } from '@/utils'
 import {
   HourDuration,
   Duration,
@@ -32,15 +33,27 @@ try {
 onMounted(() => {
   const elm = document.getElementById(props.name)
   if (elm) {
+    const color = randomColor()
     Chart.defaults.backgroundColor = '#333'
     Chart.defaults.font.size = 18
-    const color = '#68CDDB'
+    Chart.defaults.aspectRatio = 1.75
+    Chart.defaults.borderColor = '#333'
     new Chart(elm as any, {
       type: 'line',
       options: {
-        plugins: {
-          legend: {
-            labels: {},
+        scales: {
+          x: {
+            display: true,
+            title: {
+              display: true,
+            },
+          },
+          y: {
+            display: true,
+            title: {
+              display: true,
+              text: 'Usage Time/min',
+            },
           },
         },
       },
@@ -52,9 +65,8 @@ onMounted(() => {
             label: props.name,
             data: data.map((row) => row.duration / 1000 / 60),
             fill: true,
-            backgroundColor: 'rgba(68, 205, 219, 0.2)',
-            borderWidth: 3,
-            tension: 0.4,
+            backgroundColor: color + '15',
+            borderWidth: 4,
           },
         ],
       },

@@ -18,7 +18,7 @@ import GithubIcon from '../icons/Github.vue'
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px;
+  padding: 16px;
   background-color: #222;
 }
 .logo {

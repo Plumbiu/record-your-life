@@ -1,4 +1,4 @@
-import { getYMD, UsageArr, UsageMap } from '@record-your-life/shared'
+import { getYMD, UsageArr, UsageMap, Usage } from '@record-your-life/shared'
 import { AxiosResponse } from 'axios'
 import axios from '@/plugins/axios'
 
@@ -7,6 +7,7 @@ export async function getAppByDate(
 ): Promise<UsageArr[] | undefined> {
   try {
     const usage = await axios.get<any, AxiosResponse<UsageMap>>(`/date/${date}`)
+
     return Object.entries(usage?.data ?? {})
       .map(([name, value]) => ({
         name,
@@ -18,7 +19,18 @@ export async function getAppByDate(
   }
 }
 
+export async function getAll(app: string): Promise<Usage[] | undefined> {
+  try {
+    const all = await axios.get<any, AxiosResponse<Usage[]>>(`/all/${app}`)
+    return all.data
+  } catch (error) {
+    return
+  }
+}
+
 export async function getDates() {
   const raw = await axios.get<any, AxiosResponse<string[]>>('/date')
+  console.log(raw)
+
   return raw.data.map((item) => item.replace('.json', ''))
 }

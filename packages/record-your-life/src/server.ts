@@ -16,8 +16,10 @@ const DATE_JSON_REGX = /\d{4}-\d{2}-\d{2}.json/
 export async function startServer(config: Config) {
   const { storagePath } = config
   let dates: string[] | undefined
-  const html = await fsp.readFile(path.join(__dirname, '../dist', 'index.html'))
-  fastify.get('/', (req, res) => {
+  fastify.get('/', async (req, res) => {
+    const html = await fsp.readFile(
+      path.join(__dirname, '../dist', 'index.html'),
+    )
     res.send(html)
   })
 

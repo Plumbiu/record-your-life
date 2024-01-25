@@ -7,7 +7,7 @@ import {
 } from '@record-your-life/shared'
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { getAppByDate, getDates } from '@/api'
+import { getAll, getAppByDate, getDates } from '@/api'
 
 export const useDateStore = defineStore('dates', () => {
   const dates = ref<string[]>([])
@@ -23,7 +23,6 @@ export const useAppStore = defineStore('app', () => {
   const usage = ref<UsageArr[]>([])
   const prevUsage = ref<UsageArr[]>([])
   const route = useRoute()
-
   const prevTotal = computed(() => {
     return prevUsage.value.reduce((prev, curr) => prev + curr.total, 0)
   })
@@ -44,6 +43,10 @@ export const useAppStore = defineStore('app', () => {
     return usage.value.find((item) => item.name === route.query.app)
   }
 
+  async function findIncludeApp() {
+    const app = route.query.app as string
+    return await getAll(app)
+  }
   async function initApp(date: string = getYMD()) {
     usage.value = (await getAppByDate(date)) ?? []
     prevUsage.value = (await getAppByDate(backDate(date, -1))) ?? []
@@ -58,6 +61,7 @@ export const useAppStore = defineStore('app', () => {
     timeRate,
     numRate,
     date: route.query.date,
+    findIncludeApp,
   }
 })
 
