@@ -21,7 +21,7 @@ const multiUsage = await appStore.findIncludeApp()
       <ChartItem
         v-for="(item, idx) in multiUsage"
         :key="idx"
-        :name="item._date"
+        :name="item.date"
         :total="formatDuration(item.total)"
         :data="item.durations ?? []"
       />
