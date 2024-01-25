@@ -19,8 +19,12 @@ export function initConfig(): Config {
   }
 }
 
-function updateRecord(name: string | undefined, onlyInit = false) {
-  if (!name) {
+function updateRecord(
+  name: string | undefined,
+  path: string | undefined,
+  onlyInit = false,
+) {
+  if (!name || !path) {
     return
   }
   name = name.replace('.exe', '')
@@ -29,6 +33,7 @@ function updateRecord(name: string | undefined, onlyInit = false) {
   if (!record || onlyInit) {
     records.set(name, {
       total: 0,
+      path,
       end: now,
       start: now,
       durations: [],
@@ -63,11 +68,11 @@ export async function init(timer: number, config: Config) {
     ) {
       const record = records.get(curApp.info.name)
       if (!record) {
-        updateRecord(curApp.info.name, true)
+        updateRecord(curApp.info.name, curApp.info.path, true)
       } else {
         record.end = Date.now()
       }
-      updateRecord(preApp?.info.name)
+      updateRecord(preApp?.info.name, preApp?.info.path)
       preApp = curApp
     }
   })

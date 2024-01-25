@@ -1,4 +1,5 @@
 export interface Usage {
+  path: string
   start: number
   total: number
   end: number
