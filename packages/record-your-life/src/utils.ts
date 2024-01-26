@@ -3,7 +3,7 @@ import fsp from 'node:fs/promises'
 import fs, { readFileSync } from 'node:fs'
 import { WindowInfo, activeWindow } from '@miniben90/x-win'
 import color from 'picocolors'
-import { Config, Usage, getYMD } from '@record-your-life/shared'
+import { Config, Duration, Usage, getYMD } from '@record-your-life/shared'
 import { __dirname, CONFIG_FILE_PATH } from './constant'
 
 const records: Map<string, Usage> = new Map()
@@ -22,13 +22,13 @@ export function initConfig(): Config {
 function updateRecord(
   name: string | undefined,
   path: string | undefined,
-  memory: number | undefined,
+  partDuration: Partial<Pick<Duration, 'memory' | 'url' | 'title'>>,
   onlyInit = false,
 ) {
-  if (!name || !path || !memory) {
+  const { memory, url, title } = partDuration
+  if (!name || !path || !memory || !title || url == null) {
     return
   }
-  name = name.replace('.exe', '')
   const record = records.get(name)
   const now = Date.now()
   if (!record || onlyInit) {
@@ -43,7 +43,13 @@ function updateRecord(
     if (!record.path) {
       record.path = path
     }
-    record.durations.push({ time: now, duration: record.total, memory })
+    record.durations.push({
+      time: now,
+      duration: record.total,
+      memory,
+      url,
+      title,
+    })
     record.total += now - record.end
     record.end = now
   }
@@ -75,13 +81,24 @@ export async function init(timer: number, config: Config) {
         updateRecord(
           curApp.info.name,
           curApp.info.path,
-          curApp.usage.memory,
+          {
+            memory: curApp.usage.memory,
+            url: curApp.url,
+            title: curApp.title,
+          },
           true,
         )
       } else {
         record.end = Date.now()
       }
-      updateRecord(preApp?.info.name, preApp?.info.path, curApp.usage.memory)
+      if (preApp) {
+        const { info, usage, url, title } = preApp
+        updateRecord(info.name, info.path, {
+          memory: usage.memory,
+          url,
+          title,
+        })
+      }
       preApp = curApp
     }
   })

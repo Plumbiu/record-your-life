@@ -18,6 +18,8 @@ export interface UsageArr extends Usage {
 
 export interface Duration {
   time: number
+  title: string
+  url: string
   duration: number
   memory: number
 }
