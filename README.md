@@ -39,8 +39,6 @@ record-your-life init
 
 ![terminal](./resource/terminal.png)
 
-![web](./resource/web.png)
-
 # 使用
 
 > [!NOTE]  
@@ -53,12 +51,6 @@ record-your-life 2024-01-08 --list
 record-your-life 2024-01-08 --bar
 record-your-life 2024-01-08 --table
 record-your-life 2024-01-08 --board
-```
-
-## 网页
-
-```bash
-record-your-life web
 ```
 
 ## --detail
@@ -80,25 +72,28 @@ Usage:
 
 Commands:
   set <storagePath>
-  <date>
-  init [timer]       init record your life
+  [date]             Should like 2024-01-01, or 1 mean yesterday and so on
+  web                Start web server
+  watch [timer]      init record your life
+  init [timer]
 
 For more info, run any command with the `--help` flag:
   $ record-your-life set --help
   $ record-your-life --help
+  $ record-your-life web --help
+  $ record-your-life watch --help
   $ record-your-life init --help
 
 Options:
-  --table     Table format of usage
-  --bar       Bar chat format of usage
-  --board     Board chat format of usage
-  --web       Start web server
-  --list      List of apps
-  --detail    Show the unused apps
-  -h, --help  Display this message
+  --file-name  Indicate the file
+  --table      Table format of usage
+  --bar        Bar chat format of usage
+  --board      Board chat format of usage
+  --list       List of apps
+  --detail     Show the unused apps
+  -h, --help   Display this message
 ```
 
 # TODO
 
 - [] 支持年度总结等
-- [] 优化网页结构

@@ -7,7 +7,6 @@ import { Usage, backDate, getYMD } from '@record-your-life/shared'
 import color from 'picocolors'
 import { CONFIG_FILE_PATH, __dirname } from './constant'
 import { Logger, logError, logWarn } from './logger'
-import { startServer } from './server'
 import { highlight, init, initConfig } from './utils'
 
 const config = initConfig()
@@ -90,10 +89,6 @@ cli
       }
     },
   )
-
-cli.command('web', 'Start web server').action(async () => {
-  await startServer(config)
-})
 
 cli.command('watch [timer]', 'init record your life').action(async (timer) => {
   if (timer < 1000) {
