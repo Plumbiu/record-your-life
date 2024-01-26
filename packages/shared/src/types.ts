@@ -1,5 +1,5 @@
 export interface Usage {
-  path: string
+  path?: string
   start: number
   total: number
   end: number
@@ -19,7 +19,7 @@ export interface UsageArr extends Usage {
 export interface Duration {
   time: number
   duration: number
-  usage: number
+  memory: number
 }
 
 export type App = Record<string, string>

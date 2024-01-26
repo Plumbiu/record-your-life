@@ -54,6 +54,7 @@ export function getHours(time: number) {
 export interface HourDuration {
   time: number
   duration: number
+  memory: number
   formatTime: string
 }
 
@@ -65,9 +66,9 @@ export function uniqueDurationByHour(durations: Duration[]) {
   if (start === end) {
     return
   }
-  for (const { duration, time } of durations) {
+  for (const { duration, time, memory } of durations) {
     if (duration) {
-      const value = { time, duration, formatTime: getHours(time) }
+      const value = { time, duration, formatTime: getHours(time), memory }
       if (!curDur) {
         curDur = value
       }

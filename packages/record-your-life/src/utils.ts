@@ -22,10 +22,10 @@ export function initConfig(): Config {
 function updateRecord(
   name: string | undefined,
   path: string | undefined,
-  usage: number | undefined,
+  memory: number | undefined,
   onlyInit = false,
 ) {
-  if (!name || !path || !usage) {
+  if (!name || !path || !memory) {
     return
   }
   name = name.replace('.exe', '')
@@ -43,7 +43,7 @@ function updateRecord(
     if (!record.path) {
       record.path = path
     }
-    record.durations.push({ time: now, duration: record.total, usage })
+    record.durations.push({ time: now, duration: record.total, memory })
     record.total += now - record.end
     record.end = now
   }
