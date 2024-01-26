@@ -19,6 +19,7 @@ export interface UsageArr extends Usage {
 export interface Duration {
   time: number
   duration: number
+  usage: number
 }
 
 export type App = Record<string, string>
