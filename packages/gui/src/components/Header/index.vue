@@ -15,6 +15,10 @@ import GithubIcon from '../icons/Github.vue'
 
 <style scoped>
 .header {
+  position: fixed;
+  top: 0;
+  left: 300px;
+  right: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;

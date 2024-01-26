@@ -4,26 +4,15 @@ import { formatDuration } from '@record-your-life/shared'
 import { useAppStore } from '@/store'
 
 const appStore = useAppStore()
-const usage = appStore.getCurrentApp()
-const multiUsage = await appStore.findIncludeApp()
 </script>
 
 <template>
   <div class="chart_wrapper">
-    <div class="chart" v-if="usage">
+    <div class="chart" v-if="appStore.activeApp">
       <ChartItem
-        :name="($route.query.app as string)"
-        :total="formatDuration(usage.total)"
-        :data="usage.durations ?? []"
-      />
-    </div>
-    <div class="multi_chart">
-      <ChartItem
-        v-for="(item, idx) in multiUsage"
-        :key="idx"
-        :name="item.date"
-        :total="formatDuration(item.total)"
-        :data="item.durations ?? []"
+        :name="appStore.activeAppName"
+        :total="formatDuration(appStore.activeApp.total)"
+        :data="appStore.activeApp.durations ?? []"
       />
     </div>
   </div>

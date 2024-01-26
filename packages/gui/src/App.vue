@@ -2,9 +2,7 @@
 import { darkTheme, NConfigProvider, NGlobalStyle } from 'naive-ui'
 import Sider from '@/components/Sider/index.vue'
 import Header from '@/components/Header/index.vue'
-import { useRoute } from 'vue-router'
-
-const route = useRoute()
+import Chart from '@/views/Chart/index.vue'
 </script>
 
 <template>
@@ -15,7 +13,7 @@ const route = useRoute()
         <div class="main">
           <Header />
           <div class="view">
-            <RouterView :key="route.fullPath" />
+            <Chart />
           </div>
         </div>
       </div>
@@ -26,7 +24,7 @@ const route = useRoute()
 
 <style scoped>
 .main {
-  margin-left: 420px;
+  margin-left: 260px;
   flex: 1;
 }
 .view {

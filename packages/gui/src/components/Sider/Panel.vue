@@ -14,9 +14,9 @@ const { tl, bl, br } = defineProps<{
     </div>
     <div class="panel_item">
       <div>
-        <h2>{{ bl }}</h2>
+        <div class="num">{{ bl }}</div>
       </div>
-      <div class="f-c" style="width: 130px">
+      <div class="f-c" style="width: 125px">
         <span class="fade">{{ br }} YTD</span>
         <slot name="br" />
       </div>
@@ -37,6 +37,10 @@ const { tl, bl, br } = defineProps<{
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+.num {
+  font-weight: 700;
+  font-size: 18px;
 }
 .fade {
   color: #777;

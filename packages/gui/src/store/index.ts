@@ -1,67 +1,42 @@
 import { defineStore } from 'pinia'
-import {
-  UsageArr,
-  backDate,
-  formatHour,
-  getYMD,
-} from '@record-your-life/shared'
-import { computed, ref } from 'vue'
-import { useRoute } from 'vue-router'
-import { getAll, getAppByDate, getDates } from '@/api'
+import { UsageArr, getYMD } from '@record-your-life/shared'
+import { computed, ref, watch } from 'vue'
 
-export const useDateStore = defineStore('dates', () => {
-  const dates = ref<string[]>([])
-  const selectedDate = ref<string>(getYMD())
-
-  async function initDate() {
-    dates.value = await getDates()
-  }
-  return { dates, initDate, selectedDate }
-})
+export const useDateStore = defineStore('dates', () => {})
 
 export const useAppStore = defineStore('app', () => {
   const usage = ref<UsageArr[]>([])
-  const prevUsage = ref<UsageArr[]>([])
-  const route = useRoute()
-  const prevTotal = computed(() => {
-    return prevUsage.value.reduce((prev, curr) => prev + curr.total, 0)
-  })
+  const activeAppName = ref('')
+  const allDate = ref<string[]>([])
+  const selectedDate = ref<string>(getYMD())
+  const activeApp = ref<UsageArr>()
 
-  const total = computed(() => {
-    return usage.value.reduce((prev, curr) => prev + curr.total, 0)
-  })
-
-  const timeRate = computed(() => {
-    return formatHour(total.value - (prevTotal.value ?? 0), 1)
-  })
-
-  const numRate = computed(() => {
-    return usage.value.length - prevUsage.value.length
-  })
-
-  function getCurrentApp() {
-    return usage.value.find((item) => item.name === route.query.app)
+  async function initDate() {
+    allDate.value = await window.api.getDates()
   }
+  const total = computed(() =>
+    usage.value.reduce((prev, curr) => prev + curr.total, 0),
+  )
 
-  async function findIncludeApp() {
-    const app = route.query.app as string
-    return await getAll(app)
-  }
   async function initApp(date: string = getYMD()) {
-    usage.value = (await getAppByDate(date)) ?? []
-    prevUsage.value = (await getAppByDate(backDate(date, -1))) ?? []
+    usage.value = (await window.api.getAppByDate(date)) ?? []
+    console.log(usage.value)
   }
+
+  watch(activeAppName, (value) => {
+    activeApp.value = usage.value.find((item) => item.name === value)
+  })
 
   return {
     usage,
     total,
     initApp,
-    getCurrentApp,
-    prevTotal,
-    timeRate,
-    numRate,
-    date: route.query.date,
-    findIncludeApp,
+    activeAppName,
+    activeApp,
+    date: '2022-01-20',
+    allDate,
+    initDate,
+    selectedDate,
   }
 })
 

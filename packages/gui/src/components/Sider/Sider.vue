@@ -11,11 +11,9 @@ import SubSider from './SubSider.vue'
     <div class="sider_item">
       <div class="side_item__active">
         <DataIcon />
-        <div>Chart</div>
       </div>
       <div>
         <TableIcon />
-        <div>Table</div>
       </div>
     </div>
     <div class="sider_item">
@@ -41,7 +39,7 @@ import SubSider from './SubSider.vue'
   border-right: 1px solid #282828;
   flex-direction: column;
   justify-content: space-between;
-  width: 80px;
+  width: 60px;
   background-color: #181818;
   text-align: center;
 }
@@ -51,7 +49,7 @@ import SubSider from './SubSider.vue'
   transition: background-color 125ms;
   border-radius: 4px;
   padding: 12px 0;
-  width: 80px;
+  width: 60px;
 }
 
 .sider_item > div:hover {

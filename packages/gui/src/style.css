@@ -1,80 +1,53 @@
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+body {
+  margin: 0;
+  min-width: 1200px;
+  width: 100%;
+  height: 100vh;
+  background-color: #111 !important;
+}
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
 }
 
 a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+  text-decoration: none;
+  color: inherit;
 }
 
-body {
-  margin: 0;
+.f-c {
   display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  align-items: center;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+/* 滚动条 */
+::-webkit-scrollbar-thumb:horizontal {
+  position: absolute;
+  background-color: #181818;
+  -webkit-border-radius: 6px;
 }
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
+::-webkit-scrollbar-track-piece {
+  -webkit-border-radius: 0;
 }
-button:hover {
-  border-color: #646cff;
+::-webkit-scrollbar {
+  -webkit-appearance: none;
+  transition: background-color 0.25s ease-out;
+  width: 6px;
+  height: 6px;
 }
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+::-webkit-scrollbar-thumb:vertical {
+  height: 25px;
+  background-color: #555;
+  -webkit-border-radius: 4px;
+  outline-offset: -2px;
 }
-
-.card {
-  padding: 2em;
-}
-
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+::-webkit-scrollbar-thumb:hover {
+  height: 25px;
+  background-color: #555;
+  -webkit-border-radius: 4px;
 }

@@ -5,5 +5,3 @@ import Sider from './Sider.vue'
 <template>
   <Sider />
 </template>
-
-<style></style>

@@ -1,6 +1,9 @@
+import fsp from 'node:fs/promises'
 import path from 'node:path'
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron'
+import { UsageMap } from '@record-your-life/shared'
 
+const STORAGE_PATH = 'E:\\program\\record-your-life'
 // The built directory structure
 //
 // ├─┬─┬ dist
@@ -31,7 +34,7 @@ function createWindow() {
   win.webContents.on('did-finish-load', () => {
     win?.webContents.send('main-process-message', new Date().toLocaleString())
   })
-
+  win.webContents.openDevTools()
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL)
   } else {
@@ -58,4 +61,34 @@ app.on('activate', () => {
   }
 })
 
-app.whenReady().then(createWindow)
+app.whenReady().then(() => {
+  const DATE_JSON_REGX = /\d{4}-\d{2}-\d{2}.json/
+  ipcMain.handle('all-date', async () => {
+    const dates = (await fsp.readdir(STORAGE_PATH))
+      .filter((item) => DATE_JSON_REGX.test(item))
+      .map((item) => item.replace('.json', ''))
+    return dates
+  })
+
+  ipcMain.handle('app', async (_e, date: string) => {
+    try {
+      const content = await fsp.readFile(
+        path.join(STORAGE_PATH, date + '.json'),
+        'utf-8',
+      )
+      const raw: UsageMap = JSON.parse(content)
+      const result = []
+      for (const [name, value] of Object.entries(raw)) {
+        result.push({
+          name,
+          ...value,
+        })
+      }
+
+      return result.sort((a, b) => b.total - a.total)
+    } catch (err) {
+      return
+    }
+  })
+  createWindow()
+})

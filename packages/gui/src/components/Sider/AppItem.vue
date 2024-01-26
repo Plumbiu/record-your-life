@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { app, isActive, total } = defineProps<{
+const { app, total, isActive } = defineProps<{
   app: string
   isActive: boolean
   total: string
@@ -7,45 +7,38 @@ const { app, isActive, total } = defineProps<{
 </script>
 
 <template>
-  <RouterLink
-    :to="{
-      name: 'chart',
-      path: '/chart',
-      query: {
-        app,
-      },
-    }"
+  <div
+    class="app_item"
     :class="{
-      side_item__active: isActive,
+      active: isActive,
     }"
   >
-    <div>{{ app }}</div>
-    <div class="value">
-      <span>use</span>
-      <span>-</span>
-      <span>{{ total }}h</span>
-    </div>
-  </RouterLink>
+    <div class="key">{{ app }}</div>
+    <div class="value">{{ total }}h</div>
+  </div>
 </template>
 
 <style scoped>
+.app_item {
+  border-radius: 4px;
+  padding: 8px 4px;
+  cursor: pointer;
+  transition: background-color 125ms;
+}
+.app_item:hover {
+  background-color: #333;
+}
+.key,
 .value {
   display: flex;
+  justify-content: center;
   align-items: center;
-  color: #777;
   gap: 4px;
 }
-.side_item__active {
-  position: relative;
+.value {
+  color: #777;
 }
-.side_item__active::before {
-  content: '';
-  position: absolute;
-  left: -12px;
-  top: -3px;
-  bottom: -3px;
-  background-color: red;
-  border-radius: 0 2px 2px 0;
-  width: 4px;
+.active {
+  background-color: #333;
 }
 </style>

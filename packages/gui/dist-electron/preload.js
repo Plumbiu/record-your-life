@@ -1,6 +1,16 @@
 "use strict";
 const electron = require("electron");
 electron.contextBridge.exposeInMainWorld("ipcRenderer", withPrototype(electron.ipcRenderer));
+electron.contextBridge.exposeInMainWorld("api", {
+  async getDates() {
+    const allDate = await electron.ipcRenderer.invoke("all-date");
+    return allDate;
+  },
+  async getAppByDate(date) {
+    const app = await electron.ipcRenderer.invoke("app", date);
+    return app;
+  }
+});
 function withPrototype(obj) {
   const protos = Object.getPrototypeOf(obj);
   for (const [key, value] of Object.entries(protos)) {
