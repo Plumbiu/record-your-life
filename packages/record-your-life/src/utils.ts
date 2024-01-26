@@ -31,7 +31,7 @@ function updateRecord(
   name = name.replace('.exe', '')
   const record = records.get(name)
   const now = Date.now()
-  if (!record || !record.path || onlyInit) {
+  if (!record || onlyInit) {
     records.set(name, {
       total: 0,
       path,
@@ -40,6 +40,9 @@ function updateRecord(
       durations: [],
     })
   } else {
+    if (!record.path) {
+      record.path = path
+    }
     record.durations.push({ time: now, duration: record.total, usage })
     record.total += now - record.end
     record.end = now
