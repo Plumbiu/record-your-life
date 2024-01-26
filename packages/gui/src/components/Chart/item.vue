@@ -36,7 +36,7 @@ onMounted(() => {
     const color = randomColor()
     Chart.defaults.backgroundColor = '#333'
     Chart.defaults.font.size = 18
-    Chart.defaults.aspectRatio = 1.75
+    Chart.defaults.aspectRatio = 1.7
     Chart.defaults.borderColor = '#333'
     new Chart(elm as any, {
       type: 'line',

@@ -17,7 +17,7 @@ import GithubIcon from '../icons/Github.vue'
 .header {
   position: fixed;
   top: 0;
-  left: 300px;
+  left: 240px;
   right: 0;
   display: flex;
   justify-content: space-between;

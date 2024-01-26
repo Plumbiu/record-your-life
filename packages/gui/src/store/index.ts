@@ -10,7 +10,6 @@ export const useAppStore = defineStore('app', () => {
   const allDate = ref<string[]>([])
   const selectedDate = ref<string>(getYMD())
   const activeApp = ref<UsageArr>()
-
   async function initDate() {
     allDate.value = await window.api.getDates()
   }
@@ -24,7 +23,10 @@ export const useAppStore = defineStore('app', () => {
   }
 
   watch(activeAppName, (value) => {
+    console.log(value)
+
     activeApp.value = usage.value.find((item) => item.name === value)
+    console.log(activeApp.value)
   })
 
   return {
@@ -33,7 +35,6 @@ export const useAppStore = defineStore('app', () => {
     initApp,
     activeAppName,
     activeApp,
-    date: '2022-01-20',
     allDate,
     initDate,
     selectedDate,

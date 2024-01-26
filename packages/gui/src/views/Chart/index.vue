@@ -10,6 +10,7 @@ const appStore = useAppStore()
   <div class="chart_wrapper">
     <div class="chart" v-if="appStore.activeApp">
       <ChartItem
+        :key="appStore.activeAppName"
         :name="appStore.activeAppName"
         :total="formatDuration(appStore.activeApp.total)"
         :data="appStore.activeApp.durations ?? []"
@@ -20,24 +21,11 @@ const appStore = useAppStore()
 
 <style scoped>
 .chart {
-  width: 90%;
   margin: 0 auto;
   box-sizing: border-box;
   border-radius: 4px;
   justify-content: flex-start;
   margin: 0 auto;
   flex-wrap: wrap;
-}
-
-.multi_chart {
-  width: 90%;
-  margin: 0 auto;
-  display: flex;
-  justify-content: flex-start;
-
-  flex-wrap: wrap;
-}
-.multi_chart > div {
-  width: 50%;
 }
 </style>
