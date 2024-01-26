@@ -25,6 +25,8 @@ const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']
 function createWindow() {
   win = new BrowserWindow({
     icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
+    width: 900,
+    height: 600,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
@@ -79,10 +81,18 @@ app.whenReady().then(() => {
       const raw: UsageMap = JSON.parse(content)
       const result = []
       for (const [name, value] of Object.entries(raw)) {
-        result.push({
-          name,
-          ...value,
-        })
+        try {
+          if (value.path) {
+            const icon = await app.getFileIcon(value.path, {
+              size: 'large',
+            })
+            result.push({
+              name,
+              ...value,
+              icon: icon.toDataURL(),
+            })
+          }
+        } catch (error) {}
       }
 
       return result.sort((a, b) => b.total - a.total)

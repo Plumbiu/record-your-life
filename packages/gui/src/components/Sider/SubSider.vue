@@ -26,7 +26,7 @@ watch(selectedDate, async (date) => {
   <div class="sub_sider f-c">
     <NSelect
       size="small"
-      style="width: 125px"
+      style="width: 96%"
       v-model:value="selectedDate"
       :options="dateOptions"
     />
@@ -34,6 +34,7 @@ watch(selectedDate, async (date) => {
       <AppItem
         @click="store.activeAppName = item.name"
         :app="item.name"
+        :icon="item.icon"
         :is-active="store.activeAppName === item.name"
         :total="formatHour(item.total)"
       />
@@ -43,11 +44,13 @@ watch(selectedDate, async (date) => {
 
 <style scoped>
 .sub_sider {
+  box-sizing: border-box;
   position: fixed;
   left: 60px;
   top: 0;
   bottom: 0;
-  width: 180px;
+  width: 240px;
+  border-right: 1px solid #282828;
   flex-direction: column;
   background-color: #181818;
   overflow: auto;

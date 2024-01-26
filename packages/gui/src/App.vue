@@ -24,8 +24,9 @@ import Chart from '@/views/Chart/index.vue'
 
 <style scoped>
 .main {
+  width: calc(100vw - 300px);
   margin-top: 80px;
-  margin-left: 240px;
+  margin-left: 300px;
 }
 .view {
   margin: 0 auto;

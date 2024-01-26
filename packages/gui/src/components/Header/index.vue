@@ -15,15 +15,17 @@ import GithubIcon from '../icons/Github.vue'
 
 <style scoped>
 .header {
+  box-sizing: border-box;
   position: fixed;
   top: 0;
-  left: 240px;
+  left: 300px;
   right: 0;
   display: flex;
+  border-bottom: 1px solid #282828;
   justify-content: space-between;
   align-items: center;
   padding: 16px;
-  background-color: #222;
+  background-color: #181818;
 }
 .logo {
   font-weight: 700;

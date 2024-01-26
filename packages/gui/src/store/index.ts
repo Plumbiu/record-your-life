@@ -4,12 +4,16 @@ import { computed, ref, watch } from 'vue'
 
 export const useDateStore = defineStore('dates', () => {})
 
+interface UsageWithIcon extends UsageArr {
+  icon: string
+}
+
 export const useAppStore = defineStore('app', () => {
-  const usage = ref<UsageArr[]>([])
+  const usage = ref<UsageWithIcon[]>([])
   const activeAppName = ref('')
   const allDate = ref<string[]>([])
   const selectedDate = ref<string>(getYMD())
-  const activeApp = ref<UsageArr>()
+  const activeApp = ref<UsageWithIcon>()
   async function initDate() {
     allDate.value = await window.api.getDates()
   }

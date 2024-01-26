@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Chart from '@/plugins/chart'
-import { randomColor } from '@/utils'
+import { COLORS } from '@/utils'
 import {
   HourDuration,
   Duration,
@@ -33,7 +33,8 @@ try {
 onMounted(() => {
   const elm = document.getElementById(props.name)
   if (elm) {
-    const color = randomColor()
+    const color1 = COLORS[0]
+    const color2 = COLORS[1]
     Chart.defaults.backgroundColor = '#333'
     Chart.defaults.font.size = 18
     Chart.defaults.aspectRatio = 1.7
@@ -61,11 +62,19 @@ onMounted(() => {
         labels: data.map((row) => formatTime(row.time).split(' ')[1]),
         datasets: [
           {
-            borderColor: color,
+            borderColor: color1,
             label: props.name,
             data: data.map((row) => row.duration / 1000 / 60),
             fill: true,
-            backgroundColor: color + '15',
+            backgroundColor: color1 + '15',
+            borderWidth: 4,
+          },
+          {
+            borderColor: color2,
+            label: props.name + ' usage',
+            data: data.map((row) => row.memory),
+            fill: true,
+            backgroundColor: color1 + '15',
             borderWidth: 4,
           },
         ],
