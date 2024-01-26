@@ -23,13 +23,16 @@ import Chart from '@/views/Chart/index.vue'
 </template>
 
 <style scoped>
+.container {
+  margin-top: 40px;
+}
 .main {
-  width: calc(100vw - 300px);
+  width: calc(100vw - var(--sider));
   margin-top: 80px;
-  margin-left: 300px;
+  margin-left: var(--sider);
 }
 .view {
-  margin: 0 auto;
-  margin-top: 24px;
+  width: 94%;
+  margin: 24px auto 0;
 }
 </style>

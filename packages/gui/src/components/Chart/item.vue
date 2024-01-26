@@ -10,12 +10,9 @@ import {
 import { onMounted, ref } from 'vue'
 
 const props = defineProps<{
-  name: string
   total: string | undefined
   data: Duration[]
 }>()
-
-console.log({ data: props.data })
 
 let data: HourDuration[] = []
 const isEmpty = ref(false)
@@ -31,51 +28,70 @@ try {
 }
 
 onMounted(() => {
-  const elm = document.getElementById(props.name)
+  const elm = document.getElementById('chart_item')
   if (elm) {
-    const color1 = COLORS[0]
-    const color2 = COLORS[1]
-    Chart.defaults.backgroundColor = '#333'
-    Chart.defaults.font.size = 18
-    Chart.defaults.aspectRatio = 1.7
+    Chart.defaults.backgroundColor = '#666'
+    Chart.defaults.color = '#aaa'
+    Chart.defaults.font.size = 15
+    Chart.defaults.aspectRatio = 1.85
     Chart.defaults.borderColor = '#333'
     new Chart(elm as any, {
       type: 'line',
       options: {
         scales: {
-          x: {
-            display: true,
-            title: {
-              display: true,
-            },
-          },
           y: {
             display: true,
             title: {
               display: true,
-              text: 'Usage Time/min',
+              text: 'Time',
+            },
+            ticks: {
+              callback(value) {
+                return value + 'min'
+              },
+            },
+          },
+          y1: {
+            display: true,
+            position: 'right',
+            title: {
+              display: true,
+              text: 'Memory',
+            },
+            ticks: {
+              callback(value) {
+                return value + 'mb'
+              },
+            },
+            // grid line settings
+            grid: {
+              drawOnChartArea: false, // only want the grid lines for one axis to show up
             },
           },
         },
       },
       data: {
-        labels: data.map((row) => formatTime(row.time).split(' ')[1]),
+        labels: data.map((row) =>
+          formatTime(row.time).split(' ')[1].slice(0, -3),
+        ),
         datasets: [
           {
-            borderColor: color1,
-            label: props.name,
+            borderColor: COLORS[0],
+            label: 'Time',
             data: data.map((row) => row.duration / 1000 / 60),
             fill: true,
-            backgroundColor: color1 + '15',
+            backgroundColor: COLORS[0] + '45',
             borderWidth: 4,
+            yAxisID: 'y',
           },
           {
-            borderColor: color2,
-            label: props.name + ' usage',
-            data: data.map((row) => row.memory),
+            borderColor: COLORS[1],
+            label: 'Memory',
+            data: data.map((row) => row.memory / 1024 / 1024),
             fill: true,
-            backgroundColor: color1 + '15',
+            backgroundColor: COLORS[1] + '45',
             borderWidth: 4,
+            yAxisID: 'y1',
           },
         ],
       },
@@ -86,15 +102,13 @@ onMounted(() => {
 
 <template>
   <div v-if="!isEmpty && data && data.length > 0" class="chart">
-    <canvas :id="name" />
+    <canvas id="chart_item" />
   </div>
 </template>
 
 <style scoped>
 .chart {
-  height: max-content;
-  margin: 8px;
+  flex: 1;
   border-radius: 4px;
-  padding: 12px;
 }
 </style>

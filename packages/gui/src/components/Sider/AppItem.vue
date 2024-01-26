@@ -1,26 +1,24 @@
 <script setup lang="ts">
+import Avatar from '@/components/ui/Avatar.vue'
+
 const { app, total, isActive, icon } = defineProps<{
   app: string
   isActive: boolean
-  total: string
+  total: string | undefined
   icon: string
 }>()
 </script>
 
 <template>
   <div
+    v-if="total"
     class="app_item"
     :class="{
       active: isActive,
     }"
   >
-    <div class="icon">
-      <img :src="icon" />
-    </div>
-    <div>
-      <div class="key">{{ app }}</div>
-      <div class="value">{{ total }}h</div>
-    </div>
+    <Avatar :src="icon" />
+    <div class="key">{{ app }}</div>
   </div>
 </template>
 
@@ -44,16 +42,6 @@ const { app, total, isActive, icon } = defineProps<{
 }
 .app_item:hover {
   background-color: #333;
-}
-.key,
-.value {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-.value {
-  font-size: 12px;
-  color: #777;
 }
 .active {
   background-color: #333;

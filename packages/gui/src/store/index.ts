@@ -21,6 +21,13 @@ export const useAppStore = defineStore('app', () => {
     usage.value.reduce((prev, curr) => prev + curr.total, 0),
   )
 
+  const dateOptions = computed(() =>
+    allDate.value.map((item) => ({
+      label: item,
+      value: item,
+    })),
+  )
+
   async function initApp(date: string = getYMD()) {
     usage.value = (await window.api.getAppByDate(date)) ?? []
     console.log(usage.value)
@@ -40,6 +47,7 @@ export const useAppStore = defineStore('app', () => {
     activeAppName,
     activeApp,
     allDate,
+    dateOptions,
     initDate,
     selectedDate,
   }

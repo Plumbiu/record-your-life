@@ -37,8 +37,8 @@
     "@fastify/cors": "^8.5.0",
     "@record-your-life/shared": "workspace:^",
     "cac": "^6.7.14",
-    "picocolors": "^1.0.0",
-    "fastify": "^4.25.2"
+    "fastify": "^4.25.2",
+    "picocolors": "^1.0.0"
   },
   "dependencies": {
     "@miniben90/x-win": "^1.6.0"

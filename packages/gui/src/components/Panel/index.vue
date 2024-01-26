@@ -1,23 +1,22 @@
 <script setup lang="ts">
-const { tl, bl, br } = defineProps<{
-  tl: string | number
-  bl: string | number
-  br: string | number
-}>()
+import { useAppStore } from '@/store'
+import Avatar from '../ui/Avatar.vue'
+import { formatDuration } from '@record-your-life/shared'
+
+const store = useAppStore()
 </script>
 
 <template>
   <div class="panel">
     <div class="panel_item">
-      <div class="fade">{{ tl }}</div>
-      <slot name="tr" />
+      <Avatar :src="store.activeApp?.icon" />
+      <div>{{ store.activeApp?.name }}</div>
     </div>
     <div class="panel_item">
       <div>
-        <div class="num">{{ bl }}</div>
+        <div class="num">{{ formatDuration(store.activeApp?.total) }}</div>
       </div>
       <div class="f-c" style="width: 125px">
-        <span class="fade">{{ br }} YTD</span>
         <slot name="br" />
       </div>
     </div>
@@ -26,17 +25,15 @@ const { tl, bl, br } = defineProps<{
 
 <style scoped>
 .panel {
-  margin: 8px;
   border-radius: 2px;
-  width: 92%;
+  margin: 8px auto 16px;
   background-color: #222;
   box-sizing: border-box;
-  padding: 12px;
+  padding: 12px 16px;
 }
 .panel_item {
   display: flex;
   align-items: center;
-  justify-content: space-between;
 }
 .num {
   font-weight: 700;

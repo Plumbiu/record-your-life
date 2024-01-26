@@ -1,8 +1,14 @@
 import fsp from 'node:fs/promises'
 import path from 'node:path'
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow, ipcMain, Menu } from 'electron'
 import { UsageMap } from '@record-your-life/shared'
+import {
+  setupTitlebar,
+  attachTitlebarToWindow,
+} from 'custom-electron-titlebar/main'
 
+// setup the titlebar main process
+setupTitlebar()
 const STORAGE_PATH = 'E:\\program\\record-your-life'
 // The built directory structure
 //
@@ -19,18 +25,21 @@ process.env.VITE_PUBLIC = app.isPackaged
   : path.join(process.env.DIST, '../public')
 
 let win: BrowserWindow | null
-// 🚧 Use ['ENV_NAME'] avoid vite:define plugin - Vite@2.x
 const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']
 
 function createWindow() {
   win = new BrowserWindow({
     icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
-    width: 900,
-    height: 600,
+    titleBarStyle: 'hidden',
+    width: 1000,
+    height: 650,
+    titleBarOverlay: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
   })
+  Menu.setApplicationMenu(null)
+  attachTitlebarToWindow(win)
 
   // Test active push message to Renderer-process.
   win.webContents.on('did-finish-load', () => {
@@ -82,7 +91,7 @@ app.whenReady().then(() => {
       const result = []
       for (const [name, value] of Object.entries(raw)) {
         try {
-          if (value.path) {
+          if (value.path && value.total > 0 && value.durations.length > 2) {
             const icon = await app.getFileIcon(value.path, {
               size: 'large',
             })
