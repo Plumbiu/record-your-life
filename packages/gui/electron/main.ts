@@ -8,7 +8,7 @@ import {
 } from 'custom-electron-titlebar/main'
 
 setupTitlebar()
-const STORAGE_PATH = 'E:\\program\\record-your-life'
+const STORAGE_PATH = './storage'
 
 process.env.DIST = path.join(__dirname, '../dist')
 process.env.VITE_PUBLIC = app.isPackaged

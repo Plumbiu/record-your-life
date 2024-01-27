@@ -45,3 +45,4 @@ record-your-life.json
 storage
 
 packages/gui/release
+packages/gui/dist-electron
