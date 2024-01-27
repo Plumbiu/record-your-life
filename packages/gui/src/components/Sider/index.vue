@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import DataIcon from '@/components/icons/Data.vue'
-import TableIcon from '@/components/icons/Table.vue'
 import SettingIcon from '@/components/icons/Setting.vue'
 import SponsorIcon from '@/components/icons/Sponsor.vue'
 import SubSider from './SubSider.vue'
@@ -11,9 +10,6 @@ import SubSider from './SubSider.vue'
     <div class="sider_item">
       <div class="side_item__active">
         <DataIcon />
-      </div>
-      <div>
-        <TableIcon />
       </div>
     </div>
     <div class="sider_item">
@@ -36,7 +32,7 @@ import SubSider from './SubSider.vue'
   bottom: 0;
   box-sizing: border-box;
   display: flex;
-  border-right: 1px solid #282828;
+  border-right: var(--sider-border);
   flex-direction: column;
   justify-content: space-between;
   width: var(--sider-base);

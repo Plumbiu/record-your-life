@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import ChartItem from '@/components/Chart/item.vue'
-import Panel from '@/components/Panel/index.vue'
+import ChartItem from './item.vue'
 import { formatDuration } from '@record-your-life/shared'
 import { useAppStore } from '@/store'
 
@@ -9,7 +8,6 @@ const appStore = useAppStore()
 
 <template>
   <div class="chart_wrapper">
-    <Panel />
     <div class="chart" v-if="appStore.activeApp">
       <ChartItem
         :key="appStore.activeAppName"
@@ -22,9 +20,10 @@ const appStore = useAppStore()
 
 <style scoped>
 .chart {
+  border: var(--border);
   display: flex;
-  box-sizing: border-box;
   border-radius: 4px;
+  padding: 4px;
   justify-content: space-between;
   margin: 0 auto;
 }

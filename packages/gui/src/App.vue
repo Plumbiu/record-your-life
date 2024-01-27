@@ -3,6 +3,7 @@ import { darkTheme, NConfigProvider, NGlobalStyle } from 'naive-ui'
 import Sider from '@/components/Sider/index.vue'
 import Header from '@/components/Header/index.vue'
 import Chart from '@/views/Chart/index.vue'
+import Tab from '@/components/Tab/index.vue'
 </script>
 
 <template>
@@ -11,9 +12,10 @@ import Chart from '@/views/Chart/index.vue'
       <div class="container">
         <Sider />
         <div class="main">
-          <Header />
           <div class="view">
-            <Chart />
+            <Tab>
+              <Chart />
+            </Tab>
           </div>
         </div>
       </div>
@@ -23,16 +25,12 @@ import Chart from '@/views/Chart/index.vue'
 </template>
 
 <style scoped>
-.container {
-  margin-top: 40px;
-}
 .main {
   width: calc(100vw - var(--sider));
-  margin-top: 80px;
   margin-left: var(--sider);
 }
 .view {
-  width: 94%;
-  margin: 24px auto 0;
+  margin-left: 12px;
+  margin-right: 16px;
 }
 </style>

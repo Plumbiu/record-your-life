@@ -1872,8 +1872,8 @@ function createWindow() {
   win = new require$$0.BrowserWindow({
     icon: path.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
     titleBarStyle: "hidden",
-    width: 1e3,
-    height: 650,
+    width: 900,
+    height: 550,
     titleBarOverlay: true,
     webPreferences: {
       preload: path.join(__dirname, "preload.js")

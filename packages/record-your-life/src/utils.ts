@@ -40,9 +40,6 @@ function updateRecord(
       durations: [],
     })
   } else {
-    if (!record.path) {
-      record.path = path
-    }
     record.durations.push({
       time: now,
       duration: record.total,

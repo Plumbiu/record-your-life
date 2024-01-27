@@ -1,22 +1,32 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+import { NSelect } from 'naive-ui'
 import { useAppStore } from '@/store'
 import AppItem from './AppItem.vue'
-import { formatDuration } from '@record-your-life/shared'
 
 const store = useAppStore()
+await store.initDate()
 const selectedDate = ref<string>(store.allDate[store.allDate.length - 1])
+
 await store.initApp(selectedDate.value as string)
 store.activeAppName = store.usage?.[0]?.name ?? ''
 
 watch(selectedDate, async (date) => {
-  console.log({ date })
   await store.initApp(date as string)
+  const first = store.usage?.[0]?.name
+  if (first) {
+    store.activeAppName = first
+  }
 })
 </script>
 
 <template>
   <div class="sub_sider f-c">
+    <NSelect
+      style="width: 96%"
+      v-model:value="selectedDate"
+      :options="store.dateOptions"
+    />
     <div class="app" v-for="item in store.usage" :key="item.name">
       <AppItem
         v-if="item.total"
@@ -24,7 +34,7 @@ watch(selectedDate, async (date) => {
         :app="item.name"
         :icon="item.icon"
         :is-active="store.activeAppName === item.name"
-        :total="formatDuration(item.total)"
+        :total="item.total"
       />
     </div>
   </div>
@@ -38,9 +48,8 @@ watch(selectedDate, async (date) => {
   top: var(--cet-header-h);
   bottom: 0;
   width: var(--sider-sub);
-  border-right: 1px solid #282828;
   flex-direction: column;
-  background-color: #181818;
+  background-color: var(--bg-cmp);
   overflow: auto;
 }
 .sub_sider::after {

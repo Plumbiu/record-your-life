@@ -31,8 +31,8 @@ function createWindow() {
   win = new BrowserWindow({
     icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
     titleBarStyle: 'hidden',
-    width: 1000,
-    height: 650,
+    width: 900,
+    height: 550,
     titleBarOverlay: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -40,7 +40,6 @@ function createWindow() {
   })
   Menu.setApplicationMenu(null)
   attachTitlebarToWindow(win)
-
   // Test active push message to Renderer-process.
   win.webContents.on('did-finish-load', () => {
     win?.webContents.send('main-process-message', new Date().toLocaleString())

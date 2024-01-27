@@ -34,10 +34,7 @@ export const useAppStore = defineStore('app', () => {
   }
 
   watch(activeAppName, (value) => {
-    console.log(value)
-
     activeApp.value = usage.value.find((item) => item.name === value)
-    console.log(activeApp.value)
   })
 
   return {

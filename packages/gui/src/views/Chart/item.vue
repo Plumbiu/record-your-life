@@ -27,17 +27,34 @@ try {
   isEmpty.value = true
 }
 
+function ticksCallback(num: string | number, unit: 'mb' | 'min') {
+  if (typeof num === 'string') {
+    return num
+  }
+  return num.toFixed(1) + unit
+}
+
 onMounted(() => {
-  const elm = document.getElementById('chart_item')
+  const elm = document.getElementById('canvas')
   if (elm) {
-    Chart.defaults.backgroundColor = '#666'
+    Chart.defaults.backgroundColor = '#999'
     Chart.defaults.color = '#aaa'
     Chart.defaults.font.size = 15
-    Chart.defaults.aspectRatio = 1.85
     Chart.defaults.borderColor = '#333'
     new Chart(elm as any, {
       type: 'line',
       options: {
+        plugins: {
+          tooltip: {
+            callbacks: {
+              footer(value) {
+                console.log({ value })
+
+                return 'value'
+              },
+            },
+          },
+        },
         scales: {
           y: {
             display: true,
@@ -47,7 +64,7 @@ onMounted(() => {
             },
             ticks: {
               callback(value) {
-                return value + 'min'
+                return ticksCallback(value, 'min')
               },
             },
           },
@@ -60,7 +77,7 @@ onMounted(() => {
             },
             ticks: {
               callback(value) {
-                return value + 'mb'
+                return ticksCallback(value, 'mb')
               },
             },
             // grid line settings
@@ -101,13 +118,13 @@ onMounted(() => {
 </script>
 
 <template>
-  <div v-if="!isEmpty && data && data.length > 0" class="chart">
-    <canvas id="chart_item" />
+  <div v-if="!isEmpty && data && data.length > 0" class="canvas_container">
+    <canvas id="canvas" />
   </div>
 </template>
 
 <style scoped>
-.chart {
+.canvas_container {
   flex: 1;
   border-radius: 4px;
 }
