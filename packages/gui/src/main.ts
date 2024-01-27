@@ -8,16 +8,12 @@ const app = createApp(App)
 
 app.use(pinia)
 
-app.mount('#app')
+app.mount('#app').$nextTick(() => {
+  // Remove Preload scripts loading
+  postMessage({ payload: 'removeLoading' }, '*')
 
-createApp(App)
-  .mount('#app')
-  .$nextTick(() => {
-    // Remove Preload scripts loading
-    postMessage({ payload: 'removeLoading' }, '*')
-
-    // Use contextBridge
-    window.ipcRenderer.on('main-process-message', (_event, message) => {
-      console.log(message)
-    })
+  // Use contextBridge
+  window.ipcRenderer.on('main-process-message', (_event, message) => {
+    console.log(message)
   })
+})

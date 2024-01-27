@@ -4,5 +4,8 @@
   "type": "module",
   "main": "./src/index.ts",
   "author": "Plumbiu",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "picocolors": "^1.0.0"
+  }
 }

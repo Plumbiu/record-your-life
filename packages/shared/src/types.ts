@@ -10,6 +10,10 @@ export interface UsageWithDate extends Usage {
   date: string
 }
 
+export interface UsageWithIcon extends UsageArr {
+  icon: string
+}
+
 export type UsageMap = Record<string, Usage>
 
 export interface UsageArr extends Usage {

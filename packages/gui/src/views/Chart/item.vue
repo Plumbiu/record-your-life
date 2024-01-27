@@ -80,17 +80,22 @@ onMounted(() => {
                 return ticksCallback(value, 'mb')
               },
             },
-            // grid line settings
             grid: {
-              drawOnChartArea: false, // only want the grid lines for one axis to show up
+              drawOnChartArea: false,
             },
           },
         },
       },
       data: {
-        labels: data.map((row) =>
-          formatTime(row.time).split(' ')[1].slice(0, -3),
-        ),
+        labels: [
+          ...new Set(
+            ...[
+              data.map((row) =>
+                formatTime(row.time).split(' ')[1].slice(0, -3),
+              ),
+            ],
+          ),
+        ],
         datasets: [
           {
             borderColor: COLORS[0],

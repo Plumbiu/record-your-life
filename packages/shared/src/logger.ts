@@ -3,9 +3,10 @@ import {
   formatDuration,
   getHours,
   uniqueDurationByHour,
-  Usage,
-} from '@record-your-life/shared'
-import { getUtf8Length, highlight } from './utils'
+  getUtf8Length,
+  highlight,
+} from './utils'
+import { Usage, UsageWithIcon } from './types'
 
 interface LogUsage extends Usage {
   name: string
@@ -19,24 +20,40 @@ export class Logger {
   appLen: number
   unusedApps: string[] = []
 
-  constructor(records: Record<string, Usage>, date: string) {
+  constructor(records: Record<string, Usage> | UsageWithIcon[], date: string) {
     let amount = 0
     this.date = date
-    for (const [name, usage] of Object.entries(records)) {
-      if (usage.total === 0) {
-        this.unusedApps.push(name)
-      } else {
-        this.records.push({
-          name,
-          ...usage,
-        })
-        amount += usage.total
-        const len = getUtf8Length(name)
-        if (len > this.nameMaxLen) {
-          this.nameMaxLen = len
+    if (Array.isArray(records)) {
+      for (const usage of records) {
+        if (usage.total === 0) {
+          this.unusedApps.push(usage.name)
+        } else {
+          this.records.push(usage)
+          amount += usage.total
+          const len = getUtf8Length(usage.name)
+          if (len > this.nameMaxLen) {
+            this.nameMaxLen = len + 2
+          }
+        }
+      }
+    } else {
+      for (const [name, usage] of Object.entries(records)) {
+        if (usage.total === 0) {
+          this.unusedApps.push(name)
+        } else {
+          this.records.push({
+            name,
+            ...usage,
+          })
+          amount += usage.total
+          const len = getUtf8Length(name)
+          if (len > this.nameMaxLen) {
+            this.nameMaxLen = len + 2
+          }
         }
       }
     }
+
     this.records.sort((a, b) => b.total - a.total)
     this.appLen = this.records.length
     this.amount = formatDuration(amount) ?? '0ms'
@@ -60,33 +77,35 @@ export class Logger {
   }
 
   list() {
-    this.records.forEach(({ name }, i) => {
-      console.log(color.dim(i + 1 + '.') + color.cyan(' ' + name))
-    })
+    let str = ''
+    for (let i = 0; i < this.records.length; i++) {
+      const { name } = this.records[i]
+      str += color.dim(i + 1 + '.') + color.cyan(' ' + name) + '\n'
+    }
+    return str
   }
 
   bar() {
     const maxLen = this.records[0].total / 300_000
-    console.log(
-      color.green(
-        color.bold(
-          'App'.padEnd(this.nameMaxLen) +
-            '  Chart'.padEnd(maxLen + 4) +
-            '  Duration',
-        ),
+    let str = color.green(
+      color.bold(
+        'App'.padEnd(this.nameMaxLen) +
+          '  Chart'.padEnd(maxLen + 4) +
+          '  Duration\n',
       ),
     )
     for (const { name, total } of this.records) {
       const duration = formatDuration(total)
       if (duration !== '0ms') {
-        console.log(
+        str +=
           color.cyan(name) +
-            ' '.repeat(this.nameMaxLen - getUtf8Length(name) + 2) +
-            '■'.repeat(Math.ceil(total / 300_000)).padEnd(maxLen + 4, ' ') +
-            duration,
-        )
+          ' '.repeat(this.nameMaxLen - getUtf8Length(name) + 2) +
+          '■'.repeat(Math.ceil(total / 300_000)).padEnd(maxLen + 4, ' ') +
+          duration +
+          '\n'
       }
     }
+    return str
   }
 
   board() {
@@ -106,18 +125,18 @@ export class Logger {
     start = Math.ceil(+getHours(start))
     end = Math.ceil(+getHours(end))
     const PEND_LEN = 9
-    let h = 'Time '.padEnd(this.nameMaxLen)
+    let str = 'Time '.padEnd(this.nameMaxLen)
     for (let i = start; i <= end; i++) {
-      h += (i + ':00').padEnd(PEND_LEN)
+      str += (i + ':00').padEnd(PEND_LEN)
     }
-    console.log(color.bold(color.green(h)))
+    str = color.bold(color.green(str)) + '\n'
     for (const { durations, name } of this.records) {
       const durs = uniqueDurationByHour(durations)
       if (!durs) {
         continue
       }
       if (durs.length > 0) {
-        let str =
+        str +=
           color.cyan(name) + ' '.repeat(this.nameMaxLen - getUtf8Length(name))
         for (let i = 0; i <= end - start; i++) {
           const dur = formatDuration(durs[i]?.duration, 1, true)
@@ -127,9 +146,10 @@ export class Logger {
             str += dur.padEnd(PEND_LEN, ' ')
           }
         }
-        console.log(str)
+        str += '\n'
       }
     }
+    return str
   }
 }
 

@@ -5,6 +5,7 @@ import TableIcon from '@/components/icons/Table.vue'
 import JSONIcon from '@/components/icons/JSON.vue'
 import TerminalIcon from '@/components/icons/Terminal.vue'
 import Chart from '@/views/Chart/index.vue'
+import Ternimal from '@/views/Ternimal/index.vue'
 </script>
 
 <template>
@@ -33,6 +34,7 @@ import Chart from '@/views/Chart/index.vue'
         <TerminalIcon />
         <span>Terminal</span>
       </template>
+      <Ternimal />
     </NTabPane>
   </NTabs>
 </template>

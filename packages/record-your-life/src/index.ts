@@ -3,10 +3,15 @@ import fsp from 'node:fs/promises'
 import { exec } from 'node:child_process'
 import { existsSync } from 'node:fs'
 import { cac } from 'cac'
-import { Usage, backDate, getYMD } from '@record-your-life/shared'
+import {
+  Logger,
+  Usage,
+  backDate,
+  getYMD,
+  logError,
+} from '@record-your-life/shared'
 import color from 'picocolors'
 import { CONFIG_FILE_PATH, __dirname } from './constant'
-import { Logger, logError, logWarn } from './logger'
 import { highlight, init, initConfig } from './utils'
 
 const config = initConfig()
@@ -43,12 +48,7 @@ cli
           console.log(date)
         } else {
           const step = -date
-          if (Number.isNaN(step)) {
-            logWarn(
-              `unkown date: "${color.underline(date)}", show tody infomration`,
-            )
-            date = today
-          } else {
+          if (!Number.isNaN(step)) {
             date = backDate(today, step)
           }
         }
@@ -64,11 +64,11 @@ cli
         if (table) {
           logger.table()
         } else if (list) {
-          logger.list()
+          console.log(logger.list())
         } else if (bar) {
-          logger.bar()
+          console.log(logger.bar())
         } else {
-          logger.board()
+          console.log(logger.board())
         }
         const unusedApps: string[] = logger.unusedApps
 

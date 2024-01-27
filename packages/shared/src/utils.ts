@@ -1,3 +1,4 @@
+import color from 'picocolors'
 import { Duration } from './types'
 
 export function pad(n: number) {
@@ -118,4 +119,16 @@ export function monthDayNum(year: number) {
     normal[1]++
   }
   return normal
+}
+
+export const highlight = (str: string | number) =>
+  // eslint-disable-next-line @stylistic/implicit-arrow-linebreak
+  color.underline(color.white(str))
+
+export function getUtf8Length(str: string) {
+  let count = 0
+  for (let i = 0; i < str.length; i++) {
+    count += Math.ceil(str[i].charCodeAt(0).toString(2).length / 8)
+  }
+  return count
 }
