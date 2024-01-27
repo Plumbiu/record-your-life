@@ -1,30 +1,26 @@
 import path from 'node:path'
 import fsp from 'node:fs/promises'
-import fs, { readFileSync } from 'node:fs'
-import { WindowInfo, activeWindow } from '@miniben90/x-win'
-import color from 'picocolors'
-import { Config, Duration, Usage, getYMD } from '@record-your-life/shared'
-import { __dirname, CONFIG_FILE_PATH } from './constant'
+import fs from 'node:fs'
+import { activeWindow } from '@miniben90/x-win'
 
-export function initConfig(): Config {
-  try {
-    const config = JSON.parse(readFileSync(CONFIG_FILE_PATH, 'utf-8'))
-    return config
-  } catch (error) {
-    return {
-      storagePath: './',
-    }
-  }
+// FIXME: replace with `reocrd-your-life/utils`
+// This file run at child process as we use nodejs native binding
+// Js file can not import ts file
+const STORAGE_PATH = './storage'
+if (!fs.existsSync(STORAGE_PATH)) {
+  fs.mkdirSync(STORAGE_PATH)
+}
+export function pad(n) {
+  return String(n).padStart(2, '0')
+}
+export function getYMD() {
+  const d = new Date()
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
 }
 
-export async function init(timer: number, config: Config) {
-  const records: Map<string, Usage> = new Map()
-  function updateRecord(
-    name: string | undefined,
-    path: string | undefined,
-    partDuration: Partial<Pick<Duration, 'memory' | 'url' | 'title'>>,
-    onlyInit = false,
-  ) {
+export async function init(timer) {
+  const records = new Map()
+  function updateRecord(name, path, partDuration, onlyInit = false) {
     const { memory, url, title } = partDuration
     if (!name || !path || !memory || !title || url == null) {
       return
@@ -51,12 +47,10 @@ export async function init(timer: number, config: Config) {
       record.end = now
     }
   }
-  const todayFile = path.join(config.storagePath, `${getYMD()}.json`)
+  const todayFile = path.join(STORAGE_PATH, `${getYMD()}.json`)
   if (fs.existsSync(todayFile)) {
     try {
-      const content: Record<string, Usage> = JSON.parse(
-        await fsp.readFile(todayFile, 'utf-8'),
-      )
+      const content = JSON.parse(await fsp.readFile(todayFile, 'utf-8'))
 
       if (content) {
         for (const [key, value] of Object.entries(content)) {
@@ -65,7 +59,7 @@ export async function init(timer: number, config: Config) {
       }
     } catch (error) {}
   }
-  let preApp: WindowInfo | undefined
+  let preApp
   watchForegroundWindow(async (curApp) => {
     if (
       curApp &&
@@ -102,26 +96,15 @@ export async function init(timer: number, config: Config) {
   }, timer)
 }
 
-export const highlight = (str: string | number) =>
-  // eslint-disable-next-line @stylistic/implicit-arrow-linebreak
-  color.underline(color.white(str))
-
-export function getUtf8Length(str: string) {
-  let count = 0
-  for (let i = 0; i < str.length; i++) {
-    count += Math.ceil(str[i].charCodeAt(0).toString(2).length / 8)
-  }
-  return count
-}
-
 async function sleep() {
   return new Promise((r) => setTimeout(r, 350))
 }
 
-export async function watchForegroundWindow(cb: (info: WindowInfo) => void) {
+export async function watchForegroundWindow(cb) {
   let oldInfo = activeWindow()
   while (true) {
     const newInfo = activeWindow()
+    console.log({ newInfo })
     if (newInfo && newInfo.info.path !== oldInfo.info.path) {
       cb(newInfo)
       oldInfo = newInfo
@@ -129,3 +112,5 @@ export async function watchForegroundWindow(cb: (info: WindowInfo) => void) {
     await sleep()
   }
 }
+
+init(1000)

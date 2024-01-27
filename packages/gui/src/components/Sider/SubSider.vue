@@ -9,7 +9,7 @@ const store = useAppStore()
 <template>
   <div class="sub_sider f-c">
     <NSelect
-      style="width: 96%"
+      style="width: 96%; background-color: #191919 !important"
       v-model:value="store.selectedDate"
       :options="store.dateOptions"
     />

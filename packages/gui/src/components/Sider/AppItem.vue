@@ -36,9 +36,8 @@ const { app, total, isActive, icon } = defineProps<{
   cursor: pointer;
   transition: background-color 125ms;
 }
-
-.info {
-  font-size: 14px;
+.key {
+  font-size: 12px;
 }
 .value {
   color: #777;

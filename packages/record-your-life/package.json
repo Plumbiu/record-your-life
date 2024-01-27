@@ -13,6 +13,9 @@
   "files": [
     "dist/**"
   ],
+  "exports": {
+    "./utils": "./src/utils.ts"
+  },
   "keywords": [
     "record",
     "win32",

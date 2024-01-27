@@ -2,12 +2,11 @@ import { contextBridge, ipcRenderer } from 'electron'
 import { Titlebar, TitlebarColor } from 'custom-electron-titlebar'
 
 window.addEventListener('DOMContentLoaded', () => {
-  // Title bar implementation
   new Titlebar({
-    backgroundColor: TitlebarColor.fromHex('#181818'),
+    backgroundColor: TitlebarColor.fromHex('#111'),
   })
 })
-// --------- Expose some API to the Renderer process ---------
+
 contextBridge.exposeInMainWorld('ipcRenderer', withPrototype(ipcRenderer))
 contextBridge.exposeInMainWorld('api', {
   async getDates() {
@@ -20,7 +19,6 @@ contextBridge.exposeInMainWorld('api', {
   },
 })
 
-// `exposeInMainWorld` can't detect attributes and methods of `prototype`, manually patching it.
 function withPrototype(obj: Record<string, any>) {
   const protos = Object.getPrototypeOf(obj)
 
@@ -38,7 +36,6 @@ function withPrototype(obj: Record<string, any>) {
   return obj
 }
 
-// --------- Preload scripts loading ---------
 function domReady(
   condition: DocumentReadyState[] = ['complete', 'interactive'],
 ) {
