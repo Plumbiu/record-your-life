@@ -1,5 +1,6 @@
 {
   "extends": "@plumbiu",
+  "ignorePatterns": ["dist/**", "dist-electron"],
   "rules": {
     "@stylistic/array-element-newline": "off",
     "@stylistic/implicit-arrow-linebreak": "off",
