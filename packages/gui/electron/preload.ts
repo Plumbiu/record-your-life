@@ -15,6 +15,8 @@ contextBridge.exposeInMainWorld('api', {
   },
   async getAppByDate(date: string) {
     const app = await ipcRenderer.invoke('app', date)
+    console.log(app)
+
     return app
   },
 })

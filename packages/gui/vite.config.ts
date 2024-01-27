@@ -20,7 +20,7 @@ export default defineConfig({
   build: {
     copyPublicDir: false,
     rollupOptions: {
-      external: ['record-your-life', '@miniben90/x-win'],
+      external: ['@miniben90/x-win'],
     },
   },
   resolve: {

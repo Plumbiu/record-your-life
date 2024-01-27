@@ -24,6 +24,7 @@ export const useAppStore = defineStore('app', () => {
 
   async function initApp(date: string = getYMD()) {
     usage.value = (await window.api.getAppByDate(date)) ?? []
+    console.log(usage.value)
     const first = usage.value?.[0]?.name
     if (first) {
       activeAppName.value = first

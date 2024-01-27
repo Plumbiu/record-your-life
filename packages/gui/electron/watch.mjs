@@ -51,7 +51,6 @@ export async function init(timer) {
   if (fs.existsSync(todayFile)) {
     try {
       const content = JSON.parse(await fsp.readFile(todayFile, 'utf-8'))
-
       if (content) {
         for (const [key, value] of Object.entries(content)) {
           records.set(key, value)
@@ -104,7 +103,6 @@ export async function watchForegroundWindow(cb) {
   let oldInfo = activeWindow()
   while (true) {
     const newInfo = activeWindow()
-    console.log({ newInfo })
     if (newInfo && newInfo.info.path !== oldInfo.info.path) {
       cb(newInfo)
       oldInfo = newInfo
