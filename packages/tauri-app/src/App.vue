@@ -11,6 +11,7 @@ const store = useAppStore()
 onMounted(async () => {
   await store.initDate()
   await store.initApp(store.allDate[store.allDate.length - 1])
+
   isDone.value = true
 })
 </script>
