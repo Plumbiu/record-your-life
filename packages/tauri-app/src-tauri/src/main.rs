@@ -104,20 +104,34 @@ fn get_now_time() -> u128 {
     now
 }
 
-fn update_record(name: String, path: String, title: String) {
+fn update_record(name: String, path: String, title: String, only_init: bool) {
     let mut binding = RECORDS.lock().unwrap();
     let record = binding.get_mut(&name);
     let now = get_now_time();
     match record {
         Some(r) => {
-            r.update(
-                now,
-                Duration {
-                    time: now,
-                    title,
-                    duration: r.total,
-                },
-            );
+            if let true = only_init {
+                drop(binding);
+                RECORDS.lock().unwrap().insert(
+                    name,
+                    Usage {
+                        path,
+                        start: now,
+                        total: 0,
+                        end: now,
+                        durations: Vec::new(),
+                    },
+                );
+            } else {
+                r.update(
+                    now,
+                    Duration {
+                        time: now,
+                        title,
+                        duration: r.total,
+                    },
+                );
+            }
         }
         None => {
             drop(binding);
@@ -147,7 +161,25 @@ async fn watch() {
                 prev_win.app_name,
                 prev_win.process_path.to_string_lossy().to_string(),
                 prev_win.title,
+                false,
             );
+            let now = get_now_time();
+            let mut binding = RECORDS.lock().unwrap();
+            let usage = binding.get_mut(&cur_app.app_name);
+            match usage {
+                Some(r) => {
+                    r.end = now;
+                }
+                None => {
+                    drop(binding);
+                    update_record(
+                        cur_app.app_name.clone(),
+                        cur_app.process_path.to_string_lossy().to_string(),
+                        cur_app.title.clone(),
+                        true,
+                    );
+                }
+            };
             prev_win = cur_app.clone();
         }
     }
@@ -167,7 +199,7 @@ async fn write() {
         }
         let _ = fs::write(
             Path::new(STORAGE_PATH).join(TODAY.to_string()),
-            serde_json::to_string(&result).unwrap(),
+            serde_json::to_string_pretty(&result).unwrap(),
         );
     }
 }
