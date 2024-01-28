@@ -9,7 +9,7 @@ import {
 } from 'custom-electron-titlebar/main'
 
 setupTitlebar()
-const STORAGE_PATH = './storage'
+const STORAGE_PATH = 'E:\\program\\record-your-life'
 if (!fs.existsSync(STORAGE_PATH)) {
   fs.mkdirSync(STORAGE_PATH)
 }
