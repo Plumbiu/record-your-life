@@ -1,4 +1,5 @@
 import fsp from 'node:fs/promises'
+import fs from 'node:fs'
 import path from 'node:path'
 import { app, BrowserWindow, ipcMain, Menu, utilityProcess } from 'electron'
 import { UsageMap } from '@record-your-life/shared'
@@ -9,7 +10,9 @@ import {
 
 setupTitlebar()
 const STORAGE_PATH = './storage'
-
+if (!fs.existsSync(STORAGE_PATH)) {
+  fs.mkdirSync(STORAGE_PATH)
+}
 process.env.DIST = path.join(__dirname, '../dist')
 process.env.VITE_PUBLIC = app.isPackaged
   ? process.env.DIST

@@ -7,12 +7,14 @@ const store = useAppStore()
 </script>
 
 <template>
-  <div class="sub_sider f-c">
-    <NSelect
-      style="width: 96%; background-color: #191919 !important"
-      v-model:value="store.selectedDate"
-      :options="store.dateOptions"
-    />
+  <div class="sub_sider">
+    <div>
+      <NSelect
+        style="width: 96%; background-color: #191919 !important"
+        v-model:value="store.selectedDate"
+        :options="store.dateOptions"
+      />
+    </div>
     <div class="app" v-for="item in store.usage" :key="item.name">
       <AppItem
         v-if="item.total"
