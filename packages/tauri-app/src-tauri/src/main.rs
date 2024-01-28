@@ -104,34 +104,20 @@ fn get_now_time() -> u128 {
     now
 }
 
-fn update_record(name: String, path: String, title: String, only_init: bool) {
+fn update_record(name: String, path: String, title: String) {
     let mut binding = RECORDS.lock().unwrap();
     let record = binding.get_mut(&name);
     let now = get_now_time();
     match record {
         Some(r) => {
-            if let true = only_init {
-                drop(binding);
-                RECORDS.lock().unwrap().insert(
-                    name,
-                    Usage {
-                        path,
-                        start: now,
-                        total: 0,
-                        end: now,
-                        durations: Vec::new(),
-                    },
-                );
-            } else {
-                r.update(
-                    now,
-                    Duration {
-                        time: now,
-                        title,
-                        duration: r.total,
-                    },
-                );
-            }
+            r.update(
+                now,
+                Duration {
+                    time: now,
+                    title,
+                    duration: r.total,
+                },
+            );
         }
         None => {
             drop(binding);
@@ -161,25 +147,9 @@ async fn watch() {
                 prev_win.app_name,
                 prev_win.process_path.to_string_lossy().to_string(),
                 prev_win.title,
-                false,
             );
-        } else {
-            let now = get_now_time();
-            match RECORDS.lock().unwrap().get_mut(&cur_app.app_name) {
-                Some(r) => {
-                    r.end = now;
-                }
-                None => {
-                    update_record(
-                        cur_app.app_name.clone(),
-                        cur_app.process_path.to_string_lossy().to_string(),
-                        cur_app.title.clone(),
-                        true,
-                    );
-                }
-            };
+            prev_win = cur_app.clone();
         }
-        prev_win = cur_app.clone();
     }
 }
 
