@@ -1,7 +1,6 @@
 :root {
-  --sider-base: 50px;
-  --sider-sub: 180px;
-  --sider: calc(var(--sider-base) + var(--sider-sub));
+  --sider: 140px;
+  --active-color: #303030;
   --sider-border: 1px solid #282828;
   --bg-body: #191919;
   --bg-cmp: #181818;

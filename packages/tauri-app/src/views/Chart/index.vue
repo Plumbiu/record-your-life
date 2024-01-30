@@ -2,13 +2,15 @@
 import ChartItem from './item.vue'
 import { formatDuration } from '@record-your-life/shared'
 import { useAppStore } from '@/store'
+import Status from './Status.vue'
 
 const appStore = useAppStore()
 </script>
 
 <template>
-  <div class="chart_wrapper">
-    <div class="chart" v-if="appStore.activeApp">
+  <div class="chart_wrapper" v-if="appStore.activeApp">
+    <Status />
+    <div class="chart">
       <ChartItem
         :key="appStore.activeAppName"
         :total="formatDuration(appStore.activeApp.total)"
@@ -20,7 +22,6 @@ const appStore = useAppStore()
 
 <style scoped>
 .chart {
-  border: var(--border);
   display: flex;
   border-radius: 4px;
   padding: 4px;

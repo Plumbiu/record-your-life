@@ -5,6 +5,7 @@ import TableIcon from '@/components/icons/Table.vue'
 import JSONIcon from '@/components/icons/JSON.vue'
 import TerminalIcon from '@/components/icons/Terminal.vue'
 import Chart from '@/views/Chart/index.vue'
+import Table from '@/views/Table/index.vue'
 import Ternimal from '@/views/Ternimal/index.vue'
 </script>
 
@@ -22,6 +23,7 @@ import Ternimal from '@/views/Ternimal/index.vue'
         <TableIcon />
         <span>Table</span>
       </template>
+      <Table />
     </NTabPane>
     <NTabPane name="JSON">
       <template #tab>

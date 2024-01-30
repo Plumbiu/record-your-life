@@ -6,7 +6,6 @@ import {
   PointElement,
   LineElement,
   Filler,
-  Legend,
   Tooltip,
 } from 'chart.js'
 
@@ -18,7 +17,6 @@ Chart.register(
   Filler,
   CategoryScale,
   LinearScale,
-  Legend,
 )
 
 export default Chart

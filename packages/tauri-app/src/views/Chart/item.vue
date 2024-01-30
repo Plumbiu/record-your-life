@@ -27,61 +27,28 @@ try {
   isEmpty.value = true
 }
 
-function ticksCallback(num: string | number, unit: 'mb' | 'min') {
-  if (typeof num === 'string') {
-    return num
-  }
-  return num.toFixed(1) + unit
-}
-
 onMounted(() => {
   const elm = document.getElementById('canvas')
   if (elm) {
     Chart.defaults.backgroundColor = '#999'
     Chart.defaults.color = '#aaa'
     Chart.defaults.font.size = 15
+    Chart.defaults.aspectRatio = 1.35
     Chart.defaults.borderColor = '#333'
     new Chart(elm as any, {
       type: 'line',
       options: {
-        plugins: {
-          tooltip: {
-            callbacks: {
-              footer(value) {
-                console.log({ value })
-
-                return 'value'
-              },
-            },
-          },
-        },
         scales: {
           y: {
-            display: true,
-            title: {
-              display: true,
-              text: 'Time',
-            },
+            max: data[data.length - 1].duration * 1.15,
+            min: data[0].duration,
             ticks: {
               callback(value) {
-                return ticksCallback(value, 'min')
+                if (typeof value === 'string') {
+                  return value
+                }
+                return (value / 1000 / 60 / 60).toFixed(1) + 'h'
               },
-            },
-          },
-          y1: {
-            display: true,
-            position: 'right',
-            title: {
-              display: true,
-              text: 'Memory',
-            },
-            ticks: {
-              callback(value) {
-                return ticksCallback(value, 'mb')
-              },
-            },
-            grid: {
-              drawOnChartArea: false,
             },
           },
         },
@@ -99,21 +66,10 @@ onMounted(() => {
         datasets: [
           {
             borderColor: COLORS[0],
-            label: 'Time',
-            data: data.map((row) => row.duration / 1000 / 60),
+            data: data.map((row) => row.duration),
             fill: true,
             backgroundColor: COLORS[0] + '45',
             borderWidth: 4,
-            yAxisID: 'y',
-          },
-          {
-            borderColor: COLORS[1],
-            label: 'Memory',
-            data: data.map((row) => row.memory / 1024 / 1024),
-            fill: true,
-            backgroundColor: COLORS[1] + '45',
-            borderWidth: 4,
-            yAxisID: 'y1',
           },
         ],
       },
@@ -123,7 +79,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div v-if="!isEmpty && data && data.length > 0" class="canvas_container">
+  <div v-if="!isEmpty && data?.length > 0" class="canvas_container">
     <canvas id="canvas" />
   </div>
 </template>

@@ -1,73 +1,50 @@
 <script setup lang="ts">
-import DataIcon from '@/components/icons/Data.vue'
-import SettingIcon from '@/components/icons/Setting.vue'
-import SponsorIcon from '@/components/icons/Sponsor.vue'
-import SubSider from './SubSider.vue'
+import { NSelect } from 'naive-ui'
+import { useAppStore } from '@/store'
+import AppItem from './AppItem.vue'
+
+const store = useAppStore()
 </script>
 
 <template>
   <div class="sider">
-    <div class="sider_item">
-      <div class="side_item__active">
-        <DataIcon />
-      </div>
+    <div>
+      <NSelect
+        style="width: 96%; margin: 0 auto; background-color: #191919 !important"
+        v-model:value="store.selectedDate"
+        :options="store.dateOptions"
+      />
     </div>
-    <div class="sider_item">
-      <div>
-        <SettingIcon />
-      </div>
-      <div class="sponsor">
-        <SponsorIcon />
-      </div>
+    <div class="app" v-for="item in store.usage" :key="item.name">
+      <AppItem
+        v-if="item.total"
+        @click="store.activeAppName = item.name"
+        :app="item.name"
+        :icon="item.icon"
+        :is-active="store.activeAppName === item.name"
+        :total="item.total"
+      />
     </div>
   </div>
-  <SubSider />
 </template>
 
 <style scoped>
 .sider {
+  box-sizing: border-box;
   position: fixed;
   left: 0;
   top: 0;
   bottom: 0;
-  box-sizing: border-box;
-  display: flex;
-  border-right: var(--sider-border);
+  width: var(--sider);
   flex-direction: column;
-  justify-content: space-between;
-  width: var(--sider-base);
-  background-color: #181818;
-  text-align: center;
+  background-color: var(--bg-cmp);
+  overflow: auto;
 }
-.sider_item > div {
-  cursor: pointer;
-  text-align: center;
-  transition: background-color 125ms;
-  border-radius: 4px;
-  padding: 8px 0;
-  width: var(--sider-base);
-}
-
-.sider_item > div:hover {
-  background-color: #444;
-}
-
-.side_item__active {
-  position: relative;
-  color: red;
-}
-.side_item__active::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  background-color: red;
-  border-radius: 0 4px 4px 0;
-  width: 4px;
-}
-
-.sponsor {
-  position: relative;
+.app {
+  box-sizing: border-box;
+  margin: 0 auto;
+  margin-top: 6px;
+  width: 96%;
+  border-radius: 2px;
 }
 </style>

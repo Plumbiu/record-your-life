@@ -42,14 +42,19 @@ export function formatHour(total: number, fixed = 2) {
 export function formatTime(time: number) {
   const d = new Date(time)
 
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(
-    d.getHours(),
-  )}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${d.getDate()} ${getHMS(
+    time,
+  )}`
 }
 
 export function getHours(time: number) {
   const d = new Date(time)
   return pad(d.getHours())
+}
+
+export function getHMS(time: number) {
+  const d = new Date(time)
+  return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`
 }
 
 export interface HourDuration {

@@ -1,10 +1,10 @@
 [package]
 name = "tauri-app"
-version = "0.0.0"
+version = "0.0.1"
 description = "A Tauri App"
-authors = ["you"]
-license = ""
-repository = ""
+authors = ["Plumbiu"]
+license = "MIT"
+repository = "https://github.com/Plumbiu/record-your-life"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -20,15 +20,17 @@ base64 = "0.21.7"
 pelite = "0.10.0"
 active-win-pos-rs = "0.8.3"
 lazy_static = "1.4.0"
-tokio = { version = "1.35.1", features = [
-  "rt",
-  "rt-multi-thread",
-  "time",
-  "macros",
-] }
+tokio = { version = "1.35.1", features = ["time", "macros"] }
 chrono = "0.4.33"
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem
 # DO NOT REMOVE!!
 custom-protocol = ["tauri/custom-protocol"]
+
+[profile.release]
+panic = "abort"
+strip = true
+lto = true
+codegen-units = 1
+opt-level = "z"

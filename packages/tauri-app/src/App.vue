@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { darkTheme, NConfigProvider, NGlobalStyle } from 'naive-ui'
 import Sider from '@/components/Sider/index.vue'
-import Chart from '@/views/Chart/index.vue'
 import Tab from '@/components/Tab/index.vue'
 import { useAppStore } from '@/store'
 import { onMounted, ref } from 'vue'
@@ -11,7 +10,6 @@ const store = useAppStore()
 onMounted(async () => {
   await store.initDate()
   await store.initApp(store.allDate[store.allDate.length - 1])
-
   isDone.value = true
 })
 </script>
@@ -23,9 +21,7 @@ onMounted(async () => {
         <Sider />
         <div class="main">
           <div class="view">
-            <Tab>
-              <Chart />
-            </Tab>
+            <Tab />
           </div>
         </div>
       </div>

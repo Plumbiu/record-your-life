@@ -26,6 +26,7 @@ export const useAppStore = defineStore('app', () => {
   async function initApp(date: string = getYMD()) {
     const raw: string = await invoke('app', { file: date + '.json' })
     console.log({ raw })
+
     if (!raw) {
       return
     }
@@ -35,10 +36,11 @@ export const useAppStore = defineStore('app', () => {
     await Promise.all(
       Object.entries(parsed).map(async ([name, value]) => {
         try {
-          if (value.path && value.total > 0 && value.durations.length > 2) {
-            const icon: string =
-              'data:image/png;base64, ' +
-              (await invoke('icon', { file: value.path }))
+          if (value.total > 0 && value.durations.length > 3) {
+            const icon: string = value.path
+              ? 'data:image/png;base64, ' +
+                (await invoke('icon', { file: value.path }))
+              : ''
             result.push({
               name,
               ...value,
@@ -48,10 +50,8 @@ export const useAppStore = defineStore('app', () => {
         } catch (error) {}
       }),
     )
-    console.log({ result })
 
     usage.value = result
-    console.log(usage.value)
     const first = usage.value?.[0]?.name
     if (first) {
       activeAppName.value = first
@@ -59,10 +59,7 @@ export const useAppStore = defineStore('app', () => {
   }
 
   async function initDate() {
-    allDate.value = await invoke('dates', {
-      file: 'E:\\program\\record-your-life',
-    })
-    console.log(allDate.value)
+    allDate.value = await invoke('dates')
   }
 
   watch(selectedDate, async (date) => {
