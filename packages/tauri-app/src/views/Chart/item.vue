@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Chart from '@/plugins/chart'
-import { COLORS } from '@/utils'
+import { randomColor } from '@/utils'
 import {
   HourDuration,
   Duration,
@@ -8,6 +8,7 @@ import {
   uniqueDurationByHour,
 } from '@record-your-life/shared'
 import { onMounted, ref } from 'vue'
+
 
 const props = defineProps<{
   total: string | undefined
@@ -30,6 +31,8 @@ try {
 onMounted(() => {
   const elm = document.getElementById('canvas')
   if (elm) {
+    const color = randomColor()
+    console.log(color)
     Chart.defaults.backgroundColor = '#999'
     Chart.defaults.color = '#aaa'
     Chart.defaults.font.size = 15
@@ -65,10 +68,10 @@ onMounted(() => {
         ],
         datasets: [
           {
-            borderColor: COLORS[0],
+            borderColor: color,
             data: data.map((row) => row.duration),
             fill: true,
-            backgroundColor: COLORS[0] + '45',
+            backgroundColor: color + '45',
             borderWidth: 4,
           },
         ],

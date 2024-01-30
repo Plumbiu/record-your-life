@@ -6,6 +6,7 @@
     "@stylistic/implicit-arrow-linebreak": "off",
     "@stylistic/function-paren-newline": "off",
     "import/no-unresolved": "off",
-    "@stylistic/spaced-comment": "off"
+    "@stylistic/spaced-comment": "off",
+    "@stylistic/no-mixed-operators": "off"
   }
 }

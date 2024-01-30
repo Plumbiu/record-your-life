@@ -8,7 +8,7 @@ const appStore = useAppStore()
 </script>
 
 <template>
-  <div class="chart_wrapper" v-if="appStore.activeApp">
+  <div v-if="appStore.activeApp">
     <Status />
     <div class="chart">
       <ChartItem
