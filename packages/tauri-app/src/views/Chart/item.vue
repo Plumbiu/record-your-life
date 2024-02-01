@@ -1,77 +1,55 @@
 <script setup lang="ts">
-import Chart from '@/plugins/chart'
-import { randomColor } from '@/utils'
-import {
-  HourDuration,
-  Duration,
-  formatTime,
-  uniqueDurationByHour,
-} from '@record-your-life/shared'
-import { onMounted, ref } from 'vue'
+import { Chart, CHART_OPTIONS } from '@/plugins/chart'
+import { useAppStore } from '@/store'
+import { randomColor, uniqueArray } from '@/utils'
+import { getHMS, uniqueDurationByHour } from '@record-your-life/shared'
+import { computed, onMounted } from 'vue'
 
-
-const props = defineProps<{
-  total: string | undefined
-  data: Duration[]
-}>()
-
-let data: HourDuration[] = []
-const isEmpty = ref(false)
-
-try {
-  const uniqueData = uniqueDurationByHour(props.data)
-  if (!uniqueData || uniqueData.length === 0) {
-    throw new Error('empty')
+const store = useAppStore()
+const data = computed(() => {
+  try {
+    return uniqueDurationByHour(store.activeApp?.durations ?? []) ?? []
+  } catch (error) {
+    return []
   }
-  data = uniqueData
-} catch (error) {
-  isEmpty.value = true
+})
+
+function createColor(elm: HTMLCanvasElement) {
+  const color = randomColor()
+  const ctx = elm.getContext('2d')
+  const gradient = ctx?.createLinearGradient(0, 0, 0, 400)
+  gradient?.addColorStop(0, color + 'aa')
+  gradient?.addColorStop(0.75, color + '10')
+  return gradient
+}
+
+function canCrateChart() {
+  if (data.value.length === 0) {
+    return false
+  }
+  return true
 }
 
 onMounted(() => {
-  const elm = document.getElementById('canvas')
+  if (!canCrateChart()) {
+    return
+  }
+  const elm = document.getElementById('canvas') as HTMLCanvasElement
   if (elm) {
-    const color = randomColor()
-    console.log(color)
-    Chart.defaults.backgroundColor = '#999'
-    Chart.defaults.color = '#aaa'
-    Chart.defaults.font.size = 15
-    Chart.defaults.aspectRatio = 1.35
-    Chart.defaults.borderColor = '#333'
-    new Chart(elm as any, {
+    const color = createColor(elm)
+    new Chart(elm, {
       type: 'line',
-      options: {
-        scales: {
-          y: {
-            max: data[data.length - 1].duration * 1.15,
-            min: data[0].duration,
-            ticks: {
-              callback(value) {
-                if (typeof value === 'string') {
-                  return value
-                }
-                return (value / 1000 / 60 / 60).toFixed(1) + 'h'
-              },
-            },
-          },
-        },
-      },
+      ...CHART_OPTIONS,
       data: {
-        labels: [
-          ...new Set(
-            ...[
-              data.map((row) =>
-                formatTime(row.time).split(' ')[1].slice(0, -3),
-              ),
-            ],
-          ),
-        ],
+        labels: uniqueArray(
+          data.value.map((row) => getHMS(row.time).slice(0, -3)),
+        ),
         datasets: [
           {
             borderColor: color,
-            data: data.map((row) => row.duration),
+            data: data.value.map((row) => row.duration),
             fill: true,
-            backgroundColor: color + '45',
+            backgroundColor: color,
             borderWidth: 4,
           },
         ],
@@ -82,7 +60,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div v-if="!isEmpty && data?.length > 0" class="canvas_container">
+  <div class="canvas_container">
     <canvas id="canvas" />
   </div>
 </template>

@@ -25,12 +25,9 @@ export const useAppStore = defineStore('app', () => {
 
   async function initApp(date: string = getYMD()) {
     const raw: string = await invoke('app', { file: date + '.json' })
-    console.log({ raw })
-
     if (!raw) {
       return
     }
-
     const parsed: UsageMap = JSON.parse(raw)
     const result: UsageWithIcon[] = []
     await Promise.all(

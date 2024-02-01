@@ -155,32 +155,34 @@ async fn watch() {
     let mut prev_win = get_active_window().unwrap();
     loop {
         interval.tick().await;
-        let cur_app = get_active_window().unwrap();
-        if cur_app.process_path != prev_win.process_path {
-            update_record(
-                prev_win.app_name,
-                prev_win.process_path.to_string_lossy().to_string(),
-                prev_win.title,
-                false,
-            );
-            let now = get_now_time();
-            let mut binding = RECORDS.lock().unwrap();
-            let usage = binding.get_mut(&cur_app.app_name);
-            match usage {
-                Some(r) => {
-                    r.end = now;
-                }
-                None => {
-                    drop(binding);
-                    update_record(
-                        cur_app.app_name.clone(),
-                        cur_app.process_path.to_string_lossy().to_string(),
-                        cur_app.title.clone(),
-                        true,
-                    );
-                }
-            };
-            prev_win = cur_app.clone();
+        let cur_app = get_active_window();
+        if let Ok(cur_app) = cur_app {
+            if cur_app.process_path != prev_win.process_path {
+                update_record(
+                    prev_win.app_name,
+                    prev_win.process_path.to_string_lossy().to_string(),
+                    prev_win.title,
+                    false,
+                );
+                let now = get_now_time();
+                let mut binding = RECORDS.lock().unwrap();
+                let usage = binding.get_mut(&cur_app.app_name);
+                match usage {
+                    Some(r) => {
+                        r.end = now;
+                    }
+                    None => {
+                        drop(binding);
+                        update_record(
+                            cur_app.app_name.clone(),
+                            cur_app.process_path.to_string_lossy().to_string(),
+                            cur_app.title.clone(),
+                            true,
+                        );
+                    }
+                };
+                prev_win = cur_app.clone();
+            }
         }
     }
 }
@@ -190,16 +192,12 @@ async fn write() {
     let mut interval = time::interval(time::Duration::from_millis(1000));
     loop {
         interval.tick().await;
-        let mut result: UsageMap = HashMap::new();
-        for (key, value) in
-            <HashMap<std::string::String, Usage> as Clone>::clone(&RECORDS.lock().unwrap())
-                .into_iter()
-        {
-            result.insert(key, value);
-        }
         let _ = fs::write(
             Path::new(STORAGE_PATH).join(TODAY.to_string()),
-            serde_json::to_string_pretty(&result).unwrap(),
+            serde_json::to_string_pretty(&<HashMap<std::string::String, Usage> as Clone>::clone(
+                &RECORDS.lock().unwrap(),
+            ))
+            .unwrap(),
         );
     }
 }
