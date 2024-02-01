@@ -14,14 +14,14 @@
   "author": "Plumbiu",
   "license": "MIT",
   "devDependencies": {
-    "@plumbiu/eslint-config": "^0.2.0",
-    "@types/node": "^20.11.5",
+    "@plumbiu/eslint-config": "^0.2.1",
+    "@types/node": "^20.11.15",
     "eslint": "^8.56.0",
     "esno": "^4.0.0",
     "npm-run-all": "^4.1.5",
     "tsup": "^8.0.1",
     "typescript": "^5.3.3",
     "vite": "^5.0.12",
-    "vitest": "^1.2.1"
+    "vitest": "^1.2.2"
   }
 }
