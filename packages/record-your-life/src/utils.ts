@@ -17,16 +17,18 @@ export function initConfig(): Config {
   }
 }
 
+type R = {
+  path?: string
+  start: number
+  total: number
+  end: number
+  durations: Pick<Duration, 'time' | 'duration'>[]
+}
+
 export async function init(timer: number, config: Config) {
-  const records: Map<string, Usage> = new Map()
-  function updateRecord(
-    name: string | undefined,
-    path: string | undefined,
-    partDuration: Partial<Pick<Duration, 'memory' | 'url' | 'title'>>,
-    onlyInit = false,
-  ) {
-    const { memory, url, title } = partDuration
-    if (!name || !path || !memory || !title || url == null) {
+  const records: Map<string, R> = new Map()
+  function updateRecord(name: string | undefined, onlyInit = false) {
+    if (!name) {
       return
     }
     const record = records.get(name)
@@ -34,7 +36,6 @@ export async function init(timer: number, config: Config) {
     if (!record || onlyInit) {
       records.set(name, {
         total: 0,
-        path,
         end: now,
         start: now,
         durations: [],
@@ -43,9 +44,6 @@ export async function init(timer: number, config: Config) {
       record.durations.push({
         time: now,
         duration: record.total,
-        memory,
-        url,
-        title,
       })
       record.total += now - record.end
       record.end = now
@@ -73,26 +71,12 @@ export async function init(timer: number, config: Config) {
     ) {
       const record = records.get(curApp.info.name)
       if (!record) {
-        updateRecord(
-          curApp.info.name,
-          curApp.info.path,
-          {
-            memory: curApp.usage.memory,
-            url: curApp.url,
-            title: curApp.title,
-          },
-          true,
-        )
+        updateRecord(curApp.info.name, true)
       } else {
         record.end = Date.now()
       }
       if (preApp) {
-        const { info, usage, url, title } = preApp
-        updateRecord(info.name, info.path, {
-          memory: usage.memory,
-          url,
-          title,
-        })
+        updateRecord(preApp.info.name)
       }
       preApp = curApp
     }
