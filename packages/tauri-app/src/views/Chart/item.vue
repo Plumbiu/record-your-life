@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Chart } from '@/plugins/chart'
 import { useAppStore } from '@/store'
-import { randomColor, uniqueArray } from '@/utils'
+import { randomColor } from '@/utils'
 import { formatDuration, getHMS } from '@record-your-life/shared'
 import { onMounted } from 'vue'
 
@@ -25,12 +25,14 @@ function setupChart() {
   if (!elm) {
     return
   }
+  console.log(formatDuration(data[data.length - 1].duration, 1))
   const color = createColor(elm)
   new Chart(elm, {
     type: 'line',
     options: {
       scales: {
         y: {
+          max: data[data.length - 1].duration * 1.15,
           ticks: {
             callback(value: any) {
               if (typeof value === 'string') {
@@ -43,7 +45,7 @@ function setupChart() {
       },
     },
     data: {
-      labels: uniqueArray(data.map((row) => getHMS(row.time).slice(0, -3))),
+      labels: data.map((row) => getHMS(row.time).slice(0, -3)),
       datasets: [
         {
           borderColor: color,
