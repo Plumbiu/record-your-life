@@ -1,17 +1,13 @@
 <script setup lang="ts">
 import ChartItem from './item.vue'
 import { useAppStore } from '@/store'
-import Status from './Status.vue'
 
 const appStore = useAppStore()
 </script>
 
 <template>
-  <div>
-    <Status />
-    <div class="chart">
-      <ChartItem :key="appStore.activeAppName" />
-    </div>
+  <div class="chart">
+    <ChartItem :key="appStore.activeAppName" />
   </div>
 </template>
 

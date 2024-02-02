@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { NIcon } from 'naive-ui'
 import ApplicationIcon from '@/components/icons/Application.vue'
 
 const { src } = defineProps<{

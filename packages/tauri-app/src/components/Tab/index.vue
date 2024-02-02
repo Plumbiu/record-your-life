@@ -7,25 +7,30 @@ import Chart from '@/views/Chart/index.vue'
 </script>
 
 <template>
-  <NTabs type="line" animated>
-    <NTabPane name="chart">
-      <template #tab>
-        <LineChartIcon />
-        <span>Chart</span>
-      </template>
-      <Chart />
-    </NTabPane>
-    <NTabPane name="Table">
-      <template #tab>
-        <TableIcon />
-        <span>Table</span>
-      </template>
-      <Table />
-    </NTabPane>
-  </NTabs>
+  <div class="tab">
+    <NTabs type="line" animated>
+      <NTabPane name="chart">
+        <template #tab>
+          <LineChartIcon />
+          <span>Chart</span>
+        </template>
+        <Chart />
+      </NTabPane>
+      <NTabPane name="Table">
+        <template #tab>
+          <TableIcon />
+          <span>Table</span>
+        </template>
+        <Table />
+      </NTabPane>
+    </NTabs>
+  </div>
 </template>
 
 <style scoped>
+.tab {
+  margin: 0 6px;
+}
 span {
   margin-left: 6px;
 }
