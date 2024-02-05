@@ -1,7 +1,7 @@
 <template>
-  <div class="tag">
+  <span class="tag">
     <slot></slot>
-  </div>
+  </span>
 </template>
 
 <style scoped>
@@ -11,7 +11,7 @@
   border: 1px solid #1d3043;
   color: #409eff;
   border-radius: 4px;
-  font-size: 12px;
-  padding: 0 4px;
+  font-size: 11px;
+  padding: 2px 4px;
 }
 </style>

@@ -18,7 +18,6 @@ use tokio::time;
 #[derive(Deserialize, Serialize, Debug, Clone)]
 pub struct Duration {
     pub time: u128,
-    pub title: String,
     pub duration: u128,
 }
 
@@ -107,7 +106,7 @@ fn get_now_time() -> u128 {
     now
 }
 
-fn update_record(name: String, path: String, title: String, only_init: bool) {
+fn update_record(name: String, path: String, only_init: bool) {
     let mut binding = RECORDS.lock().unwrap();
     let record = binding.get_mut(&name);
     let now = get_now_time();
@@ -130,7 +129,6 @@ fn update_record(name: String, path: String, title: String, only_init: bool) {
                     now,
                     Duration {
                         time: now,
-                        title,
                         duration: r.total,
                     },
                 );
@@ -164,7 +162,6 @@ async fn watch() {
                 update_record(
                     prev_win.app_name,
                     prev_win.process_path.to_string_lossy().to_string(),
-                    prev_win.title,
                     false,
                 );
                 let now = get_now_time();
@@ -179,7 +176,6 @@ async fn watch() {
                         update_record(
                             cur_app.app_name.clone(),
                             cur_app.process_path.to_string_lossy().to_string(),
-                            cur_app.title.clone(),
                             true,
                         );
                     }

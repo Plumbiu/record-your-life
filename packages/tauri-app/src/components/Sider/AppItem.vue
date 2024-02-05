@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import Avatar from '@/components/ui/Avatar.vue'
+import Tag from '@/components/ui/Tag.vue'
+import { formatDuration } from '@record-your-life/shared'
 
-const { app, total, isActive, icon } = defineProps<{
+const { total, isActive, icon, app } = defineProps<{
   app: string
   isActive: boolean
   total: number | undefined
@@ -18,7 +20,10 @@ const { app, total, isActive, icon } = defineProps<{
     }"
   >
     <Avatar :src="icon" />
-    <div class="key">{{ app }}</div>
+    <div>
+      <div class="key">{{ app }}</div>
+      <Tag>{{ formatDuration(total) }}</Tag>
+    </div>
   </div>
 </template>
 
@@ -27,8 +32,9 @@ const { app, total, isActive, icon } = defineProps<{
   display: flex;
   align-items: center;
   border-radius: 2px;
+  padding: 8px 6px;
   gap: 8px;
-  padding: 8px 4px;
+  width: var(--sider);
   cursor: pointer;
   transition: background-color 125ms;
 }
@@ -39,6 +45,16 @@ const { app, total, isActive, icon } = defineProps<{
   background-color: var(--active-color);
 }
 .active {
-  background-color: var(--active-color);
+  position: relative;
+}
+.active::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 3px;
+  background-color: red;
+  border-radius: 0 2px 2px 0;
 }
 </style>

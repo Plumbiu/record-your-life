@@ -17,8 +17,8 @@ const { src } = defineProps<{
 .avatar {
   display: flex;
   align-items: center;
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
   padding: 4px;
 }
 .avatar img {

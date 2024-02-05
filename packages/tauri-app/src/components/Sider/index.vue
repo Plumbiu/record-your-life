@@ -10,7 +10,7 @@ const store = useAppStore()
   <div class="sider">
     <div>
       <NSelect
-        style="width: 96%; margin: 0 auto; background-color: #191919 !important"
+        style="background-color: #191919 !important"
         v-model:value="store.selectedDate"
         :options="store.dateOptions"
       />
@@ -44,7 +44,6 @@ const store = useAppStore()
   box-sizing: border-box;
   margin: 0 auto;
   margin-top: 6px;
-  width: 96%;
   border-radius: 2px;
 }
 </style>

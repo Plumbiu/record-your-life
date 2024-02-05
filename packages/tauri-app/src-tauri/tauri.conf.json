@@ -41,8 +41,8 @@
         "fullscreen": false,
         "resizable": true,
         "title": "tauri-app",
-        "width": 650,
-        "height": 450
+        "width": 850,
+        "height": 500
       }
     ]
   }
