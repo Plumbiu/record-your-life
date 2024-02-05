@@ -52,7 +52,8 @@ function setupChart() {
           data: data.map((row) => row.duration),
           fill: true,
           backgroundColor: color,
-          borderWidth: 4,
+          borderWidth: 2,
+          tension: 0.25
         },
       ],
     },
