@@ -9,7 +9,10 @@ use chrono::{DateTime, Local};
 use lazy_static::lazy_static;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use std::sync::Mutex;
+use std::sync::{Arc, Mutex};
+use tauri::{
+    Manager, PhysicalPosition, SystemTray, SystemTrayEvent, SystemTrayMenu, WindowEvent
+};
 use tokio::time;
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
@@ -207,10 +210,69 @@ async fn main() {
     init();
     tokio::spawn(watch());
     tokio::spawn(write());
+    let _tray_menu = SystemTrayMenu::new(); // insert the menu items here
+    let system_tray = SystemTray::new()
+        // .with_menu(tray_menu)
+        .with_tooltip("custom");
     tauri::Builder::default()
+        .system_tray(system_tray)
+        .on_system_tray_event(|app, event| {
+            match event {
+                SystemTrayEvent::MenuItemClick { .. } => {}
+                SystemTrayEvent::RightClick { .. } => {
+                    let main_window = app.get_window("main").unwrap();
+                    if main_window.is_minimized().unwrap() {
+                        main_window.unminimize().unwrap();
+                    }
+                    main_window.set_focus().unwrap();
+                }
+                SystemTrayEvent::LeftClick {
+                    position: p,
+                    size: _,
+                    ..
+                } => {
+                    //本来以为要自己build这个窗口的，但是报错，后来发现直接获取就行了
+                    //这样写有没有问题呢？每次点击都会弹出这个窗口包装成一个Arc然后move了一个副本到闭包中。
+                    let tray_window = Arc::new(app.get_window("TrayPane").expect("没有该窗口"));
+                    let size = tray_window.outer_size().unwrap();
+                    let position_y = p.y - size.height as f64;
+                    let position_x = p.x - 400 as f64;
+                    tray_window
+                        .set_position(PhysicalPosition::new(position_x, position_y))
+                        .unwrap();
+                    tray_window.show().unwrap();
+                    tray_window.set_always_on_top(true).unwrap(); //不置顶这个窗口会被挡住
+                    tray_window.set_focus().unwrap();
+                    let arc_tray = tray_window.clone();
+                    tray_window.on_window_event(move |event| match event {
+                        WindowEvent::CloseRequested { .. } => {}
+                        WindowEvent::Destroyed => {}
+                        WindowEvent::Focused(b) => {
+                            if !b {
+                                // arc_tray.close().unwrap();close后再打开报错，应该要重新build了
+                                arc_tray.hide().unwrap();
+                            }
+                        }
+                        _ => {}
+                    })
+                }
+                SystemTrayEvent::DoubleClick { .. } => {}
+                _ => {}
+            }
+        })
         .invoke_handler(tauri::generate_handler![
             icon, dates, app, init, write, watch
         ])
+        .setup(|app| {
+            let main_window = app.get_window("main").unwrap();
+            // we perform the initialization code on a new task so the app doesn't freeze
+            tauri::async_runtime::spawn(async move {
+                // initialize your app here instead of sleeping :)
+                // After it's done, close the splashscreen and display the main window
+                main_window.show().unwrap();
+            });
+            Ok(())
+        })
         .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        .expect("failed to run app");
 }

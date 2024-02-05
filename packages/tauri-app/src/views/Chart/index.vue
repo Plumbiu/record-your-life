@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Panel from './Panel.vue'
 import ChartItem from './item.vue'
 import { useAppStore } from '@/store'
 
@@ -6,6 +7,7 @@ const appStore = useAppStore()
 </script>
 
 <template>
+  <Panel />
   <div class="chart">
     <ChartItem :key="appStore.activeAppName" />
   </div>

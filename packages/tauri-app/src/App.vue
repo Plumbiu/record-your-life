@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { darkTheme, NConfigProvider, NGlobalStyle } from 'naive-ui'
 import Sider from '@/components/Sider/index.vue'
-import Tab from '@/components/Tab/index.vue'
+import Chart from '@/views/Chart/index.vue'
 import { useAppStore } from '@/store'
 import { onMounted, ref } from 'vue'
 
@@ -21,7 +21,7 @@ onMounted(async () => {
         <Sider />
         <div class="main">
           <div class="view">
-            <Tab />
+            <Chart />
           </div>
         </div>
       </div>
